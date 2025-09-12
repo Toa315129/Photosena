@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>เสนาสตูดิโอ — Photo Booth</title>
+<style>
+  :root{
+    --bg:#fff7fb;
+    --accent:#ff8fb1;
+    --muted:#6b6b6b;
+    --paper:#fffdf6;
+    --frame:#ffeef6;
+    --shadow: 0 10px 30px rgba(17,17,17,0.12);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Noto Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+    background: linear-gradient(180deg,#fff 0%, #fff7fb 100%);
+    color:#222;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+  }
+  .wrap{
+    width:100%;
+    max-width:980px;
+    background:var(--paper);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:24px;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:18px;
+  }
+  .logo{
+    width:72px;height:72px;border-radius:16px;
+    background:linear-gradient(135deg,var(--accent),#ffd7e6);
+    display:flex;align-items:center;justify-content:center;
+    color:white;font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(255,140,160,0.18);
+  }
+  h1{
+    margin:0;font-size:20px;
+    letter-spacing:0.6px;
+  }
+  p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+  .main{
+    display:grid;
+    grid-template-columns: 1fr 390px;
+    gap:20px;
+    align-items:start;
+  }
+
+  /* left: camera and controls */
+  .booth{
+    background:linear-gradient(180deg,#fff,#fff8fb);
+    border-radius:12px;padding:12px;border:1px solid rgba(0,0,0,0.03);
+  }
+  .video-wrap{
+    position:relative;
+    width:100%;padding-top:56.25%; /* 16:9 */
+    border-radius:12px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#f7eef6,#fff);
+    border:6px solid var(--frame);
+  }
+  video{
+    position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;
+    transform:scaleX(-1); /* mirror for selfie feel */
+  }
+
+  .overlay-count{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:96px;color:rgba(255,255,255,0.95);font-weight:800;text-shadow:0 6px 20px rgba(0,0,0,0.35);
+    pointer-events:none;transition:opacity .2s ease;
+  }
+  .controls{
+    display:flex;gap:8px;margin-top:12px;align-items:center;
+  }
+  button{
+    background:linear-gradient(180deg,#ff8fb1,#ff61a5);
+    color:white;border:0;padding:10px 16px;border-radius:10px;font-weight:700;
+    cursor:pointer;box-shadow:0 8px 20px rgba(255,100,150,0.18);font-size:15px;
+  }
+  button.ghost{
+    background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);box-shadow:none;
+  }
+  button:disabled{opacity:0.6;cursor:not-allowed}
+
+  /* right: preview / strip */
+  .preview{
+    background:linear-gradient(180deg,#fff,#fffaf6);
+    border-radius:12px;padding:12px;border:1px dashed rgba(0,0,0,0.04);
+    display:flex;flex-direction:column;gap:10px;align-items:center;
+  }
+  .strip-preview{
+    width:100%;
+    background:linear-gradient(180deg,#fff,#fff7f1);
+    padding:12px;border-radius:10px;border:6px solid #fff;background-clip:padding-box;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .strip-preview img{max-width:100%;display:block;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+
+  .small{
+    font-size:13px;color:var(--muted)
+  }
+
+  /* Cute decorations */
+  .decoration{
+    display:flex;gap:8px;align-items:center;margin-top:8px;
+  }
+  .tag{background:#fff;border-radius:999px;padding:6px 10px;border:1px solid rgba(0,0,0,0.03);font-weight:600;color:#b24d6a}
+
+  .controls .hint{font-size:13px;color:var(--muted);margin-left:auto}
+
+  footer{margin-top:10px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* responsive */
+  @media (max-width:880px){
+    .main{grid-template-columns:1fr; }
+    .preview{order:-1}
+    .video-wrap{padding-top:66%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" role="application">
+    <header>
+      <div class="logo">เสนา</div>
+      <div>
+        <h1>เสนาสตูดิโอ</h1>
+        <p class="lead">ถ่ายรูปสามช่องเป็นแถบกรอบน่ารัก ดาวน์โหลดเก็บไว้ได้ทันที</p>
+      </div>
+    </header>
+
+    <div class="main">
+      <div class="booth" aria-label="photo booth area">
+        <div class="video-wrap" id="videoWrap">
+          <video id="video" autoplay playsinline></video>
+          <div class="overlay-count" id="overlay" aria-hidden="true" style="opacity:0"></div>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn">เริ่มต้น</button>
+          <button id="retakeBtn" class="ghost" disabled>ถ่ายใหม่</button>
+          <button id="downloadBtn" class="ghost" disabled>ดาวน์โหลด</button>
+          <div class="hint small">รูป: 3 ช่อง • countdown: 3 · 2 · 1</div>
+        </div>
+      </div>
+
+      <aside class="preview" aria-label="preview panel">
+        <div style="width:100%;display:flex;align-items:center;justify-content:space-between">
+          <div class="small">ตัวอย่างแถบภาพ</div>
+          <div class="tag">cute frame</div>
+        </div>
+
+        <div class="strip-preview" id="stripPreview">
+          <div style="text-align:center;color:var(--muted)">ยังไม่มีรูป ลองกด "เริ่มต้น"</div>
+        </div>
+
+        <div style="width:100%;display:flex;justify-content:space-between;gap:8px">
+          <div class="small">ขนาด: 3 x 400×300 px (ปรับได้ในโค้ด)</div>
+          <div class="small">กรอบ: พาสเทล</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>© เสนาสตูดิโอ — สนุกและแชร์ภาพน่ารักได้เลย</footer>
+  </div>
+
+<script>
+/*
+ Photo Booth:
+ - ใช้ getUserMedia เปิดกล้อง
+ - เมื่อกด "เริ่มต้น": ถ่าย 3 รูป โดยมี countdown 3-2-1 ก่อนแต่ละชอต
+ - รวมภาพเป็นแถบ 3 ช่องบน canvas และแสดง preview + ปุ่มดาวน์โหลด
+ - ปรับขนาดถ้าต้องการ: photoW, photoH
+*/
+
+const startBtn = document.getElementById('startBtn');
+const retakeBtn = document.getElementById('retakeBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const video = document.getElementById('video');
+const overlay = document.getElementById('overlay');
+const stripPreview = document.getElementById('stripPreview');
+
+let stream = null;
+let photos = [];
+const photoW = 400;
+const photoH = 300;
+const gap = 18; // ช่องว่างระหว่างภาพในแถบ
+const framePadding = 18;
+const totalShots = 3;
+
+async function startCamera(){
+  if (stream) return;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    video.srcObject = stream;
+    await video.play();
+  }catch(err){
+    alert('ไม่สามารถเข้าถึงกล้องได้: ' + err.message);
+    console.error(err);
+  }
+}
+
+function showCount(num){
+  overlay.style.opacity = '1';
+  overlay.textContent = num;
+  overlay.style.transform = 'scale(1.02)';
+}
+
+function hideCount(){
+  overlay.style.opacity = '0';
+  overlay.textContent = '';
+  overlay.style.transform = 'scale(1)';
+}
+
+// short beep feedback using WebAudio
+function beep(duration = 120, frequency = 800, type = 'sine', volume = 0.04){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type; o.frequency.value = frequency;
+    g.gain.value = volume;
+    o.connect(g); g.connect(ctx.destination);
+    o.start(0);
+    setTimeout(()=>{ o.stop(); ctx.close(); }, duration);
+  }catch(e){ /* ignore if no audio allowed */ }
+}
+
+function captureFrame(){
+  // draw current video frame to an offscreen canvas and return data URL/image
+  const c = document.createElement('canvas');
+  c.width = photoW;
+  c.height = photoH;
+  const ctx = c.getContext('2d');
+
+  // mirror back to normal for final image (flip again because video is mirrored in UI)
+  ctx.save();
+  ctx.scale(-1,1);
+  ctx.drawImage(video, -photoW, 0, photoW, photoH);
+  ctx.restore();
+
+  const dataURL = c.toDataURL('image/png');
+  return dataURL;
+}
+
+function buildStripImage(images){
+  // images: array of dataURLs length = totalShots
+  const canvas = document.createElement('canvas');
+
+  const stripW = totalShots * photoW + (totalShots - 1) * gap + framePadding * 2;
+  const stripH = photoH + framePadding * 2;
+  canvas.width = stripW;
+  canvas.height = stripH;
+  const ctx = canvas.getContext('2d');
+
+  // Background paper
+  ctx.fillStyle = '#fffef7';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // draw soft border
+  const radius = 16;
+  ctx.fillStyle = '#fff';
+  // draw rounded background for whole strip
+  roundRect(ctx, 6, 6, canvas.width-12, canvas.height-12, radius);
+  ctx.fill();
+
+  // decorative pastel border
+  ctx.strokeStyle = 'rgba(255,140,160,0.12)';
+  ctx.lineWidth = 10;
+  roundRect(ctx, 6,6, canvas.width-12, canvas.height-12, radius);
+  ctx.stroke();
+
+  // draw each photo with a small inner frame
+  images.forEach((src, i) => {
+    const img = new Image();
+    img.src = src;
+    const x = framePadding + i * (photoW + gap);
+    const y = framePadding;
+    // draw frame background
+    ctx.fillStyle = '#fffefe';
+    roundRect(ctx, x-6, y-6, photoW+12, photoH+12, 12);
+    ctx.fill();
+
+    // draw image when loaded
+    img.onload = () => {
+      // subtle drop shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.08)';
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 8;
+      ctx.drawImage(img, x, y, photoW, photoH);
+      ctx.restore();
+
+      // inner border
+      ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+      ctx.lineWidth = 3;
+      roundRect(ctx, x, y, photoW, photoH, 8);
+      ctx.stroke();
+
+      // little sticker label at bottom of each frame
+      ctx.fillStyle = '#ffebf0';
+      ctx.strokeStyle = 'rgba(255,110,150,0.12)';
+      ctx.lineWidth = 2;
+      const stickerW = 80, stickerH = 22;
+      const sx = x + 12;
+      const sy = y + photoH - stickerH - 12;
+      roundRect(ctx, sx, sy, stickerW, stickerH, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#b24d6a';
+      ctx.font = '600 12px system-ui, sans-serif';
+      ctx.fillText('เสนาสตูดิโอ', sx + 10, sy + 15);
+
+      // update preview image by setting dataURL
+      stripPreview.innerHTML = '';
+      const previewImg = new Image();
+      previewImg.src = canvas.toDataURL('image/png');
+      previewImg.alt = 'photo strip';
+      previewImg.loading = 'lazy';
+      previewImg.style.maxWidth = '100%';
+      stripPreview.appendChild(previewImg);
+
+      // enable download
+      downloadBtn.disabled = false;
+    };
+  });
+
+  return canvas;
+}
+
+// helper for rounded rect path
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+async function takeThreeShots(){
+  photos = [];
+  downloadBtn.disabled = true;
+  retakeBtn.disabled = true;
+  startBtn.disabled = true;
+
+  for(let shot=0; shot<totalShots; shot++){
+    // countdown 3,2,1
+    for(let n=3; n>=1; n--){
+      showCount(n);
+      beep(120 + (3-n)*40, 800 + (3-n)*100);
+      // wait ~700ms
+      await new Promise(res => setTimeout(res, 700));
+    }
+    hideCount();
+    // small pause then capture
+    await new Promise(res => setTimeout(res, 220));
+    const data = captureFrame();
+    photos.push(data);
+    // flash effect (quick overlay blink)
+    flash();
+    // short pause between shots
+    await new Promise(res => setTimeout(res, 420));
+  }
+
+  // build strip and show preview + enable buttons
+  const canvas = buildStripImage(photos);
+  // set download action
+  downloadBtn.onclick = () => {
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'photostrip.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  retakeBtn.disabled = false;
+  startBtn.disabled = false;
+  // show final preview if not already updated in onload
+  // (if images loaded asynchronously, preview will update via onload)
+}
+
+// small flash overlay on video wrap to indicate capture
+function flash(){
+  const el = document.createElement('div');
+  el.style.position = 'absolute';
+  el.style.inset = '0';
+  el.style.background = 'rgba(255,255,255,0.9)';
+  el.style.pointerEvents = 'none';
+  el.style.opacity = '0.95';
+  el.style.zIndex = '999';
+  el.style.transition = 'opacity 420ms ease';
+  document.getElementById('videoWrap').appendChild(el);
+  setTimeout(()=>{ el.style.opacity = '0'; }, 40);
+  setTimeout(()=>{ el.remove(); }, 480);
+}
+
+// events
+startBtn.addEventListener('click', async () => {
+  startBtn.disabled = true;
+  await startCamera();
+  // small warmup pause
+  setTimeout(async () => {
+    await takeThreeShots();
+    startBtn.disabled = false;
+  }, 220);
+});
+
+retakeBtn.addEventListener('click', async () => {
+  photos = [];
+  stripPreview.innerHTML = '<div style="text-align:center;color:var(--muted)">ยังไม่มีรูป ลองกด "เริ่มต้น"</div>';
+  downloadBtn.disabled = true;
+  retakeBtn.disabled = true;
+});
+
+// init: try to start camera lazily for faster UX (optional)
+(async function init(){
+  // try to get camera preview permission but do not force if blocked
+  try{
+    await startCamera();
+  }catch(e){}
+})();
+
+// cleanup when leaving
+window.addEventListener('beforeunload', () => {
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop());
+  }
+});
+</script>
+</body>
+</html>

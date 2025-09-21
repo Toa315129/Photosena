@@ -9,53 +9,52 @@
 
 <style>
 :root{
-  --bg:#fdfaf4;      /* ครีม */
-  --blue:#a7d8f7;    /* ฟ้าพาสเทล */
-  --pink:#ffd6e8;    /* ชมพูพาสเทล */
-  --text:#333333;
+  --bg:#fdfaf4;
+  --blue:#a7d8f7;
+  --pink:#ffd6e8;
+  --yellow:#fff5b1;
+  --text:#333;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  height:100%;background:var(--bg);
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);
   font-family:"Quicksand",sans-serif;
-  display:flex;align-items:center;justify-content:center;padding:18px;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;min-height:100vh;
 }
 .container{
   width:100%;max-width:960px;
   background:var(--bg);
+  border:6px solid var(--blue);
   border-radius:18px;
   padding:18px;
-  border:6px solid var(--blue);
-  position:relative;
   box-shadow:0 6px 16px rgba(0,0,0,0.08);
   min-height:90vh;
   display:flex;flex-direction:column;
+  position:relative;
 }
-.header{text-align:center;margin-bottom:20px;position:relative;}
+.header{text-align:center;margin-bottom:16px;}
 .brand{
-  font-size:48px;font-weight:700;
-  color:var(--blue);
-  text-transform:uppercase;
+  font-size:42px;font-weight:700;
+  color:var(--blue);text-transform:uppercase;
   margin-bottom:6px;
 }
 
 /* ดาวตกแต่ง */
-.star{
-  position:absolute;
-  width:14px;height:14px;
-  background:var(--pink);
-  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-  opacity:0.8;
+.decorate{
+  position:absolute;width:28px;height:28px;opacity:0.8;
 }
-.star:nth-child(1){top:20px;left:20px;}
-.star:nth-child(2){top:60px;right:40px;}
-.star:nth-child(3){bottom:30px;left:60px;}
-.star:nth-child(4){bottom:40px;right:20px;}
+.decorate.heart{background:var(--pink);clip-path:polygon(50% 0%,61% 8%,68% 20%,66% 32%,50% 50%,34% 32%,32% 20%,39% 8%);}
+.decorate.star{background:var(--yellow);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+.decorate:nth-child(1){top:20px;left:20px;}
+.decorate:nth-child(2){top:60px;right:40px;}
+.decorate:nth-child(3){bottom:40px;left:60px;}
+.decorate:nth-child(4){bottom:30px;right:20px;}
 
 .page{display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;}
 .page.active{display:flex;}
 
-/* เลือกจำนวน */
+/* หน้าเลือก */
 .layout-select{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:30px}
 .layout-card{
   background:#fff;border-radius:12px;
@@ -65,7 +64,7 @@ html,body{
 }
 .layout-card:hover{transform:scale(1.05);}
 .layout-preview{
-  width:100px;height:140px;background:#eee;
+  width:100px;height:140px;background:#f0f0f0;
   display:flex;flex-wrap:wrap;gap:4px;padding:6px;
   justify-content:center;align-items:center;
 }
@@ -76,14 +75,20 @@ html,body{
 
 /* กล้อง */
 .preview{
-  width:100%;border-radius:14px;overflow:hidden;
+  width:100%;max-width:420px;
+  border-radius:14px;overflow:hidden;
   background:#fff;border:4px solid var(--blue);
-  aspect-ratio:3/4;position:relative;max-width:420px;
+  aspect-ratio:3/4;position:relative;
 }
-#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
 .countdown{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:4rem;color:var(--pink);font-weight:700;
+}
+.progress{
+  position:absolute;top:6px;left:50%;transform:translateX(-50%);
+  background:rgba(255,255,255,0.8);padding:4px 10px;border-radius:8px;
+  font-weight:600;font-size:14px;color:var(--text);
 }
 .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity 0.18s}
 .flash.show{opacity:0.85}
@@ -91,7 +96,7 @@ html,body{
 .btn{
   padding:10px 14px;border-radius:12px;border:2px solid var(--blue);
   background:#fff;color:var(--text);font-weight:600;cursor:pointer;
-  transition:all 0.2s ease;font-family:"Quicksand",sans-serif;
+  transition:all 0.2s ease;
 }
 .btn:hover:not(:disabled){background:var(--blue);color:#fff;}
 .btn:disabled{opacity:0.55;cursor:not-allowed}
@@ -102,16 +107,19 @@ html,body{
 }
 .shutter:hover{background:var(--pink);}
 
-/* กรอบโพลารอยด์ */
+/* ผลลัพธ์ */
 .polaroid{
   background:#fff;padding:6px 6px 18px 6px;
   border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.12);
   display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.polaroid::after{
+  content:"✨";position:absolute;bottom:2px;right:6px;font-size:14px;opacity:0.7;
 }
 .polaroid img{width:100%;height:100%;object-fit:cover;border-radius:4px;}
 .result-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
 .result-item{flex:1;min-width:45%;max-width:45%;}
-
 .footer-note{text-align:center;font-size:18px;margin-top:14px;color:#555;}
 </style>
 </head>
@@ -119,17 +127,18 @@ html,body{
 <div class="container">
   <div class="header">
     <div class="brand">SENA PHOTOBOOTH</div>
-    <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
   </div>
+  <div class="decorate heart"></div>
+  <div class="decorate star"></div>
+  <div class="decorate heart"></div>
+  <div class="decorate star"></div>
 
   <!-- หน้าเลือก -->
   <div class="page active" id="page-select">
-    <h2>เลือกจำนวนช่องรูป</h2>
+    <h2>เลือกจำนวนช่องรูป 📷</h2>
     <div class="layout-select">
       <div class="layout-card" data-layout="2">
-        <div class="layout-preview">
-          <div></div><div style="flex-basis:100%"></div>
-        </div>
+        <div class="layout-preview"><div></div><div></div></div>
         <div style="text-align:center;margin-top:6px">2 รูป</div>
       </div>
       <div class="layout-card" data-layout="3">
@@ -139,15 +148,11 @@ html,body{
         <div style="text-align:center;margin-top:6px">3 รูป</div>
       </div>
       <div class="layout-card" data-layout="4">
-        <div class="layout-preview">
-          <div></div><div></div><div></div><div></div>
-        </div>
+        <div class="layout-preview"><div></div><div></div><div></div><div></div></div>
         <div style="text-align:center;margin-top:6px">4 รูป</div>
       </div>
       <div class="layout-card" data-layout="6">
-        <div class="layout-preview">
-          <div></div><div></div><div></div><div></div><div></div><div></div>
-        </div>
+        <div class="layout-preview"><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <div style="text-align:center;margin-top:6px">6 รูป</div>
       </div>
     </div>
@@ -158,6 +163,7 @@ html,body{
     <div class="preview" id="preview">
       <video id="video" autoplay playsinline></video>
       <div class="countdown" id="countdown"></div>
+      <div class="progress" id="progress"></div>
       <div class="flash" id="flash"></div>
     </div>
     <div class="controls">
@@ -175,7 +181,7 @@ html,body{
     <h2>ภาพของคุณ 🎉</h2>
     <div class="result-grid" id="resultGrid"></div>
     <div class="footer-note">@saphasena68</div>
-    <button class="btn" style="margin-top:14px" onclick="restart()">ถ่ายใหม่</button>
+    <button class="btn" style="margin-top:14px" onclick="restart()">กลับหน้าแรก</button>
   </div>
 </div>
 
@@ -188,7 +194,7 @@ let layout=3,captures=[],stream,useFront=true;
 
 document.querySelectorAll(".layout-card").forEach(c=>c.addEventListener("click",()=>{layout=parseInt(c.dataset.layout);showPage("capture");startCamera();}));
 
-const video=document.getElementById("video"),shutter=document.getElementById("shutter"),retake=document.getElementById("retake"),switchBtn=document.getElementById("switch"),uploadBtn=document.getElementById("upload"),downloadBtn=document.getElementById("download"),fileInput=document.getElementById("fileInput"),countdownEl=document.getElementById("countdown"),flash=document.getElementById("flash"),snap=document.getElementById("snap");
+const video=document.getElementById("video"),shutter=document.getElementById("shutter"),retake=document.getElementById("retake"),switchBtn=document.getElementById("switch"),uploadBtn=document.getElementById("upload"),downloadBtn=document.getElementById("download"),fileInput=document.getElementById("fileInput"),countdownEl=document.getElementById("countdown"),flash=document.getElementById("flash"),snap=document.getElementById("snap"),progress=document.getElementById("progress");
 
 async function startCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFront?'user':'environment'}});video.srcObject=stream;}
 switchBtn.onclick=()=>{useFront=!useFront;startCamera();};
@@ -196,17 +202,17 @@ switchBtn.onclick=()=>{useFront=!useFront;startCamera();};
 function captureFrame(){const c=document.createElement("canvas");c.width=video.videoWidth;c.height=video.videoHeight;const ctx=c.getContext("2d");ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(video,0,0);return c.toDataURL("image/png");}
 function doFlash(){snap.play().catch(()=>{});flash.classList.add("show");setTimeout(()=>flash.classList.remove("show"),200);}
 
-async function takeSeq(){captures=[];retake.disabled=true;downloadBtn.disabled=true;for(let i=0;i<layout;i++){for(let s=3;s>=1;s--){countdownEl.textContent=s;await new Promise(r=>setTimeout(r,1000));}countdownEl.textContent="";doFlash();captures.push(captureFrame());if(i<layout-1) await new Promise(r=>setTimeout(r,800));}retake.disabled=false;downloadBtn.disabled=false;showResult();}
+async function takeSeq(){captures=[];progress.textContent="";retake.disabled=true;downloadBtn.disabled=true;for(let i=0;i<layout;i++){for(let s=3;s>=1;s--){countdownEl.textContent=s;await new Promise(r=>setTimeout(r,1000));}countdownEl.textContent="";doFlash();captures.push(captureFrame());progress.textContent=`📸 ${i+1}/${layout}`;if(i<layout-1) await new Promise(r=>setTimeout(r,800));}retake.disabled=false;downloadBtn.disabled=false;showResult();}
 shutter.onclick=takeSeq;
 retake.onclick=()=>{captures=[];showPage("capture");};
 
 uploadBtn.onclick=()=>fileInput.click();
-fileInput.onchange=async e=>{const files=[...e.target.files].slice(0,layout);captures=[];for(const f of files){captures.push(await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);}));}showResult();};
+fileInput.onchange=async e=>{const files=[...e.target.files].slice(0,layout);captures=[];for(const f of files){captures.push(await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);}));}progress.textContent=`📸 ${files.length}/${layout}`;showResult();};
 
 function makePolaroid(src){return `<div class="polaroid"><img src="${src}"></div>`;}
-function showResult(){showPage("result");const grid=document.getElementById("resultGrid");grid.innerHTML="";let gridStyle="";if(layout===2){gridStyle="flex-direction:column;"}else if(layout===3){gridStyle="flex-direction:column;"}else if(layout===4){gridStyle="flex-wrap:wrap;"}else if(layout===6){gridStyle="flex-wrap:wrap;"}grid.style=gridStyle;captures.forEach(src=>{const div=document.createElement("div");div.className="result-item";div.innerHTML=makePolaroid(src);grid.appendChild(div);});}
+function showResult(){showPage("result");const grid=document.getElementById("resultGrid");grid.innerHTML="";if(layout===2||layout===3){grid.style.flexDirection="column";grid.style.flexWrap="nowrap";}else{grid.style.flexWrap="wrap";grid.style.flexDirection="row";}captures.forEach(src=>{const div=document.createElement("div");div.className="result-item";div.innerHTML=makePolaroid(src);grid.appendChild(div);});}
 
-downloadBtn.onclick=()=>{if(!captures.length) return;const a=document.createElement("a");a.href=captures[0];a.download="sena_photobooth.png";a.click();};
+downloadBtn.onclick=()=>{if(!captures.length) return;const canvas=document.createElement("canvas");const cols=layout===4||layout===6? (layout===4?2:3):1;const rows=Math.ceil(layout/cols);const w=300,h=400;canvas.width=cols*w;canvas.height=rows*h;const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);captures.forEach((src,i)=>{const img=new Image();img.onload=()=>{const x=(i%cols)*w,y=Math.floor(i/cols)*h;ctx.drawImage(img,x,y,w,h);if(i===captures.length-1){const a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download="sena_photobooth.png";a.click();}};img.src=src;});};
 function restart(){captures=[];showPage("select");}
 </script>
 </body>

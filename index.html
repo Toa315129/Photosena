@@ -9,10 +9,10 @@
 
 <style>
 :root{
-  --bg:#fdfaf4;
-  --blue:#a7d8f7;
-  --pink:#ffd6e8;
-  --text:#333;
+  --bg:#fdfaf4;      /* ครีม */
+  --blue:#a7d8f7;    /* ฟ้าพาสเทล */
+  --pink:#ffd6e8;    /* ชมพูพาสเทล */
+  --text:#333333;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{
@@ -21,21 +21,25 @@ html,body{
   display:flex;align-items:center;justify-content:center;padding:18px;
 }
 .container{
-  width:100%;max-width:1080px;
+  width:100%;max-width:960px;
   background:var(--bg);
   border-radius:18px;
   padding:18px;
   border:6px solid var(--blue);
   position:relative;
   box-shadow:0 6px 16px rgba(0,0,0,0.08);
+  min-height:90vh;
+  display:flex;flex-direction:column;
 }
 .header{text-align:center;margin-bottom:20px;position:relative;}
 .brand{
-  font-size:42px;font-weight:700;
+  font-size:48px;font-weight:700;
   color:var(--blue);
   text-transform:uppercase;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
+
+/* ดาวตกแต่ง */
 .star{
   position:absolute;
   width:14px;height:14px;
@@ -48,21 +52,42 @@ html,body{
 .star:nth-child(3){bottom:30px;left:60px;}
 .star:nth-child(4){bottom:40px;right:20px;}
 
-.main{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
-.camera-wrap{flex:1 1 360px;min-width:300px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.page{display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;}
+.page.active{display:flex;}
+
+/* เลือกจำนวน */
+.layout-select{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+.layout-card{
+  background:#fff;border-radius:12px;
+  padding:14px;border:3px solid var(--blue);
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  cursor:pointer;transition:transform 0.2s;
+}
+.layout-card:hover{transform:scale(1.05);}
+.layout-preview{
+  width:100px;height:140px;background:#eee;
+  display:flex;flex-wrap:wrap;gap:4px;padding:6px;
+  justify-content:center;align-items:center;
+}
+.layout-preview div{
+  background:#ddd;flex:1;min-width:40%;aspect-ratio:3/4;
+  border:2px solid #fff;
+}
+
+/* กล้อง */
 .preview{
   width:100%;border-radius:14px;overflow:hidden;
   background:#fff;border:4px solid var(--blue);
-  aspect-ratio:3/4;position:relative;
+  aspect-ratio:3/4;position:relative;max-width:420px;
 }
-#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
 .countdown{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-size:4rem;color:var(--pink);font-weight:700;
 }
 .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity 0.18s}
 .flash.show{opacity:0.85}
-.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
 .btn{
   padding:10px 14px;border-radius:12px;border:2px solid var(--blue);
   background:#fff;color:var(--text);font-weight:600;cursor:pointer;
@@ -73,22 +98,21 @@ html,body{
 .shutter{
   width:80px;height:80px;border-radius:50%;background:#fff;border:5px solid var(--blue);
   display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  margin:10px;
 }
 .shutter:hover{background:var(--pink);}
-.gallery{
-  flex:1 1 360px;display:grid;gap:14px;
-  justify-items:center;width:100%;
-}
+
+/* กรอบโพลารอยด์ */
 .polaroid{
   background:#fff;padding:6px 6px 18px 6px;
-  border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.12);
+  border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.12);
   display:flex;align-items:center;justify-content:center;
-  position:relative;
 }
-.polaroid img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
-.note{font-size:14px;color:var(--text);text-align:center;margin-top:6px}
-.qr-wrap{margin-top:10px;text-align:center}
-#qrcode{margin-top:8px}
+.polaroid img{width:100%;height:100%;object-fit:cover;border-radius:4px;}
+.result-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+.result-item{flex:1;min-width:45%;max-width:45%;}
+
+.footer-note{text-align:center;font-size:18px;margin-top:14px;color:#555;}
 </style>
 </head>
 <body>
@@ -98,166 +122,92 @@ html,body{
     <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
   </div>
 
-  <!-- เลือกจำนวนรูป -->
-  <div style="text-align:center;margin-bottom:16px;">
-    <span style="font-weight:600">เลือกจำนวนรูป:</span>
-    <button class="btn" onclick="setLayout(2)">🖼️2</button>
-    <button class="btn" onclick="setLayout(3)">🖼️3</button>
-    <button class="btn" onclick="setLayout(4)">🖼️4</button>
-    <button class="btn" onclick="setLayout(6)">🖼️6</button>
-  </div>
-
-  <div class="main">
-    <div class="camera-wrap">
-      <div class="preview" id="preview">
-        <video id="video" autoplay playsinline></video>
-        <div class="countdown" id="countdown"></div>
-        <div class="flash" id="flash"></div>
+  <!-- หน้าเลือก -->
+  <div class="page active" id="page-select">
+    <h2>เลือกจำนวนช่องรูป</h2>
+    <div class="layout-select">
+      <div class="layout-card" data-layout="2">
+        <div class="layout-preview">
+          <div></div><div style="flex-basis:100%"></div>
+        </div>
+        <div style="text-align:center;margin-top:6px">2 รูป</div>
       </div>
-      <div class="controls">
-        <div class="shutter" id="shutter" aria-label="Shutter button"></div>
-        <button class="btn" id="retake" disabled>ถ่ายใหม่</button>
-        <button class="btn" id="switch">สลับกล้อง</button>
-        <button class="btn" id="upload">อัปโหลด</button>
-        <button class="btn" id="download" disabled>ดาวน์โหลด</button>
-        <button class="btn" id="makeqr" disabled>สร้าง QR</button>
-        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      <div class="layout-card" data-layout="3">
+        <div class="layout-preview" style="flex-direction:column">
+          <div></div><div></div><div></div>
+        </div>
+        <div style="text-align:center;margin-top:6px">3 รูป</div>
       </div>
-      <div class="note">กดถ่าย หรืออัปโหลด ตามจำนวนที่เลือก</div>
-      <div class="qr-wrap"><div id="qrcode"></div></div>
+      <div class="layout-card" data-layout="4">
+        <div class="layout-preview">
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <div style="text-align:center;margin-top:6px">4 รูป</div>
+      </div>
+      <div class="layout-card" data-layout="6">
+        <div class="layout-preview">
+          <div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div style="text-align:center;margin-top:6px">6 รูป</div>
+      </div>
     </div>
-
-    <div class="gallery" id="gallery"></div>
   </div>
-  <div style="text-align:center;margin-top:12px;font-size:14px;color:#888;">saphasena68</div>
+
+  <!-- หน้าถ่าย -->
+  <div class="page" id="page-capture">
+    <div class="preview" id="preview">
+      <video id="video" autoplay playsinline></video>
+      <div class="countdown" id="countdown"></div>
+      <div class="flash" id="flash"></div>
+    </div>
+    <div class="controls">
+      <div class="shutter" id="shutter"></div>
+      <button class="btn" id="retake" disabled>ถ่ายใหม่</button>
+      <button class="btn" id="switch">สลับกล้อง</button>
+      <button class="btn" id="upload">อัปโหลด</button>
+      <button class="btn" id="download" disabled>ดาวน์โหลด</button>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+  </div>
+
+  <!-- หน้าผลลัพธ์ -->
+  <div class="page" id="page-result">
+    <h2>ภาพของคุณ 🎉</h2>
+    <div class="result-grid" id="resultGrid"></div>
+    <div class="footer-note">@saphasena68</div>
+    <button class="btn" style="margin-top:14px" onclick="restart()">ถ่ายใหม่</button>
+  </div>
 </div>
 
 <audio id="snap" src="https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3" preload="auto"></audio>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-(async()=>{
-const video=document.getElementById('video');
-const shutter=document.getElementById('shutter');
-const retakeBtn=document.getElementById('retake');
-const switchBtn=document.getElementById('switch');
-const downloadBtn=document.getElementById('download');
-const uploadBtn=document.getElementById('upload');
-const qrBtn=document.getElementById('makeqr');
-const fileInput=document.getElementById('fileInput');
-const countdownEl=document.getElementById('countdown');
-const flash=document.getElementById('flash');
-const snap=document.getElementById('snap');
-const gallery=document.getElementById('gallery');
+const pages={select:document.getElementById("page-select"),capture:document.getElementById("page-capture"),result:document.getElementById("page-result")};
+function showPage(p){Object.values(pages).forEach(pg=>pg.classList.remove("active"));pages[p].classList.add("active");}
+let layout=3,captures=[],stream,useFront=true;
 
-let stream=null,useFront=true;
-let captures=[],layoutCount=3,finalImage=null;
+document.querySelectorAll(".layout-card").forEach(c=>c.addEventListener("click",()=>{layout=parseInt(c.dataset.layout);showPage("capture");startCamera();}));
 
-if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-  alert('เบราว์เซอร์นี้ไม่รองรับการเปิดกล้อง');
-  throw new Error('getUserMedia not supported');
-}
-async function startCamera(){
-  if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;}
-  try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFront?'user':'environment'},audio:false});
-    video.srcObject=stream; await video.play();
-  }catch(e){alert('ไม่สามารถเปิดกล้องได้: '+e.message);}
-}
-await startCamera();
-switchBtn.addEventListener('click',async()=>{useFront=!useFront;await startCamera();});
+const video=document.getElementById("video"),shutter=document.getElementById("shutter"),retake=document.getElementById("retake"),switchBtn=document.getElementById("switch"),uploadBtn=document.getElementById("upload"),downloadBtn=document.getElementById("download"),fileInput=document.getElementById("fileInput"),countdownEl=document.getElementById("countdown"),flash=document.getElementById("flash"),snap=document.getElementById("snap");
 
-function captureFrame(){
-  const vw=video.videoWidth,vh=video.videoHeight;
-  const c=document.createElement('canvas'); c.width=vw; c.height=vh;
-  const ctx=c.getContext('2d'); ctx.translate(c.width,0); ctx.scale(-1,1);
-  ctx.drawImage(video,0,0,vw,vh);
-  return c.toDataURL('image/png');
-}
-function showCount(n){countdownEl.textContent=n;}
-function hideCount(){countdownEl.textContent='';}
-function doFlash(){snap.currentTime=0;snap.play().catch(()=>{});flash.classList.add('show');setTimeout(()=>flash.classList.remove('show'),170);}
-function loadImage(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});}
+async function startCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());}stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFront?'user':'environment'}});video.srcObject=stream;}
+switchBtn.onclick=()=>{useFront=!useFront;startCamera();};
 
-function setLayout(n){
-  layoutCount=n;
-  captures=[];
-  gallery.innerHTML="";
-  retakeBtn.disabled=true;downloadBtn.disabled=true;qrBtn.disabled=true;
-}
-window.setLayout=setLayout;
+function captureFrame(){const c=document.createElement("canvas");c.width=video.videoWidth;c.height=video.videoHeight;const ctx=c.getContext("2d");ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(video,0,0);return c.toDataURL("image/png");}
+function doFlash(){snap.play().catch(()=>{});flash.classList.add("show");setTimeout(()=>flash.classList.remove("show"),200);}
 
-function layoutHTML(){
-  if(layoutCount===2){gallery.style.gridTemplateColumns="1fr";}
-  if(layoutCount===3){gallery.style.gridTemplateColumns="1fr";}
-  if(layoutCount===4){gallery.style.gridTemplateColumns="1fr 1fr";}
-  if(layoutCount===6){gallery.style.gridTemplateColumns="1fr 1fr 1fr";}
-  let grid="";
-  captures.forEach(img=>{
-    grid+=`<div class="polaroid"><img src="${img}"></div>`;
-  });
-  return grid;
-}
+async function takeSeq(){captures=[];retake.disabled=true;downloadBtn.disabled=true;for(let i=0;i<layout;i++){for(let s=3;s>=1;s--){countdownEl.textContent=s;await new Promise(r=>setTimeout(r,1000));}countdownEl.textContent="";doFlash();captures.push(captureFrame());if(i<layout-1) await new Promise(r=>setTimeout(r,800));}retake.disabled=false;downloadBtn.disabled=false;showResult();}
+shutter.onclick=takeSeq;
+retake.onclick=()=>{captures=[];showPage("capture");};
 
-async function takeSequence(){
-  captures=[];gallery.innerHTML="";
-  retakeBtn.disabled=true;downloadBtn.disabled=true;qrBtn.disabled=true; shutter.style.pointerEvents='none';
-  for(let i=0;i<layoutCount;i++){
-    for(let s=3;s>=1;s--){showCount(s);await new Promise(r=>setTimeout(r,1000));}
-    hideCount();doFlash();const data=captureFrame();
-    captures.push(data);
-    gallery.innerHTML=layoutHTML();
-    if(i<layoutCount-1) await new Promise(r=>setTimeout(r,800));
-  }
-  retakeBtn.disabled=false;downloadBtn.disabled=false;qrBtn.disabled=false; shutter.style.pointerEvents='';
-}
-shutter.addEventListener('click',takeSequence);
+uploadBtn.onclick=()=>fileInput.click();
+fileInput.onchange=async e=>{const files=[...e.target.files].slice(0,layout);captures=[];for(const f of files){captures.push(await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f);}));}showResult();};
 
-retakeBtn.addEventListener('click',()=>{captures=[];gallery.innerHTML="";downloadBtn.disabled=true;qrBtn.disabled=true;});
+function makePolaroid(src){return `<div class="polaroid"><img src="${src}"></div>`;}
+function showResult(){showPage("result");const grid=document.getElementById("resultGrid");grid.innerHTML="";let gridStyle="";if(layout===2){gridStyle="flex-direction:column;"}else if(layout===3){gridStyle="flex-direction:column;"}else if(layout===4){gridStyle="flex-wrap:wrap;"}else if(layout===6){gridStyle="flex-wrap:wrap;"}grid.style=gridStyle;captures.forEach(src=>{const div=document.createElement("div");div.className="result-item";div.innerHTML=makePolaroid(src);grid.appendChild(div);});}
 
-uploadBtn.addEventListener('click',()=>fileInput.click());
-fileInput.addEventListener('change',async(e)=>{
-  const files=[...e.target.files].slice(0,layoutCount); 
-  if(files.length<layoutCount){alert(`กรุณาเลือก ${layoutCount} รูป`); return;}
-  captures=[];
-  for(const file of files){
-    const reader=new FileReader();
-    await new Promise((res,rej)=>{reader.onload=()=>{captures.push(reader.result);gallery.innerHTML=layoutHTML();res();};reader.onerror=rej;reader.readAsDataURL(file);});
-  }
-  retakeBtn.disabled=false;downloadBtn.disabled=false;qrBtn.disabled=false;
-});
-
-async function buildImage(){
-  const W=1600,H=2400;const c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='#a7d8f7';ctx.fillRect(W/2-400,60,800,120);
-  ctx.fillStyle='#fff';ctx.font='72px Quicksand';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('SENA PHOTOBOOTH',W/2,120);
-
-  let rows=1,cols=1;
-  if(layoutCount===2){rows=2;cols=1;}
-  if(layoutCount===3){rows=3;cols=1;}
-  if(layoutCount===4){rows=2;cols=2;}
-  if(layoutCount===6){rows=2;cols=3;}
-
-  const margin=60,gap=30;
-  const boxW=(W-margin*2-(cols-1)*gap)/cols;
-  const boxH=(H-300-(rows-1)*gap)/rows;
-
-  for(let i=0;i<captures.length;i++){
-    const img=await loadImage(captures[i]);
-    const col=i%cols,row=Math.floor(i/cols);
-    const dx=margin+col*(boxW+gap),dy=200+row*(boxH+gap);
-    ctx.fillStyle='#fff';ctx.fillRect(dx-12,dy-12,boxW+24,boxH+36);
-    ctx.drawImage(img,dx,dy,boxW,boxH);
-  }
-
-  ctx.fillStyle='#333';ctx.font='28px Quicksand';ctx.fillText('saphasena68',W/2,H-50);
-  return c.toDataURL('image/png');
-}
-
-downloadBtn.addEventListener('click',async()=>{if(!captures[0])return;finalImage=await buildImage();const a=document.createElement('a');a.href=finalImage;a.download='Sena_booth.png';a.click();});
-qrBtn.addEventListener('click',async()=>{if(!captures[0])return;finalImage=await buildImage();document.getElementById('qrcode').innerHTML='';new QRCode(document.getElementById('qrcode'),{text:finalImage,width:200,height:200});});
-})();
+downloadBtn.onclick=()=>{if(!captures.length) return;const a=document.createElement("a");a.href=captures[0];a.download="sena_photobooth.png";a.click();};
+function restart(){captures=[];showPage("select");}
 </script>
 </body>
 </html>

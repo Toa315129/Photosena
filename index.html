@@ -2,325 +2,242 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sena Photobooth</title>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
-body {
-  margin: 0;
-  font-family: 'Nunito', sans-serif;
-  background: linear-gradient(180deg, #f0faff, #ffffff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  color: #444;
-}
-
-/* Container */
-.container {
-  text-align: center;
-  width: 100%;
-  max-width: 960px;
-  padding: 20px;
-}
-
-/* Title */
-h1 {
-  font-family: 'Pacifico', cursive;
-  font-size: 50px;
-  color: #3da9fc;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 6px rgba(61,169,252,0.2);
-}
-
-/* Camera Box */
-#camera {
-  position: relative;
-  width: 640px;
-  height: 480px;
-  margin: 0 auto 20px auto;
-  border-radius: 20px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-#camera video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Flash effect */
-#flash {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #fff;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-/* Buttons */
-button {
-  background: #3da9fc;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  padding: 12px 28px;
-  border-radius: 30px;
-  cursor: pointer;
-  margin: 8px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(61,169,252,0.3);
-}
-button:hover {
-  background: #90dbf4;
-  transform: translateY(-2px);
-}
-
-/* Thumbnails */
-#thumbnails {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  gap: 10px;
-}
-#thumbnails img {
-  width: 100px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 3px solid #cde8ff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-/* Download Page */
-#download-page {
-  display: none;
-  padding: 20px;
-}
-#frame {
-  width: 600px; height: 900px;
-  margin: 20px auto;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  position: relative;
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-.photo {
-  width: 45%; height: 28%;
-  margin: 8px;
-  background-size: cover;
-  background-position: center;
-  border: 4px solid #cde8ff;
-  border-radius: 12px;
-}
-
-/* Title in Frame */
-#frame-title {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  text-align: center;
-  font-family: 'Pacifico', cursive;
-  font-size: 32px;
-  color: #3da9fc;
-}
-
-/* Stickers */
-#stickers {
-  margin-top: 20px;
-}
-.sticker {
-  font-size: 32px;
-  margin: 6px;
-  cursor: grab;
-}
-.sticker-on-frame {
-  position: absolute;
-  cursor: grab;
-}
-
-/* Decorative Stars */
-.star {
-  position: absolute;
-  opacity: 0.8;
-}
-.star.yellow { color: #ffd93d; }
-.star.pink { color: #ff90b3; }
-.star.blue { color: #90dbf4; }
-#star1 { top: 10px; left: 10px; font-size: 36px; }
-#star2 { top: 10px; right: 20px; font-size: 42px; }
-#star3 { bottom: 20px; left: 30px; font-size: 30px; }
-#star4 { bottom: 20px; right: 20px; font-size: 40px; }
-
-/* Extra floating stars */
-.floating-star {
-  position: absolute;
-  font-size: 18px;
-  opacity: 0.6;
-  animation: twinkle 2s infinite ease-in-out alternate;
-}
-@keyframes twinkle {
-  from { opacity: 0.4; transform: scale(1);}
-  to { opacity: 1; transform: scale(1.2);}
-}
+  body {
+    margin: 0;
+    font-family: 'Arial Rounded MT Bold', 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  #booth {
+    position: relative;
+    width: 400px;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  #title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #3a6ea5;
+    margin-bottom: 12px;
+  }
+  video {
+    width: 100%;
+    border-radius: 16px;
+    border: 4px solid #a8d8ff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  /* Countdown */
+  #countdown {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 0 0 12px white;
+    display: none;
+  }
+  /* Buttons */
+  .controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  button {
+    background: linear-gradient(135deg, #a8d8ff, #cce6ff);
+    color: #3a6ea5;
+    font-weight: bold;
+    border-radius: 30px;
+    border: none;
+    padding: 10px 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(168,216,255,0.6);
+    transition: 0.3s;
+  }
+  button:hover {
+    background: linear-gradient(135deg, #91c9ff, #b5dcff);
+    transform: scale(1.08);
+  }
+  /* Preview Polaroid */
+  #previews {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .preview {
+    width: 100px;
+    background: white;
+    border: 2px solid #cce6ff;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .preview img {
+    width: 100%;
+    border-radius: 6px;
+  }
+  .preview p {
+    font-size: 10px;
+    color: #3a6ea5;
+    margin: 4px 0 0 0;
+  }
+  /* Sticker Bar */
+  #sticker-options {
+    display: flex;
+    overflow-x: auto;
+    margin-top: 15px;
+    padding: 10px;
+    background: #f9fcff;
+    border-radius: 16px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    gap: 10px;
+  }
+  #sticker-options span {
+    flex: 0 0 auto;
+    background: #fff;
+    border: 2px solid #cce6ff;
+    border-radius: 12px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  #sticker-options span:hover {
+    background: #a8d8ff;
+    color: #fff;
+    transform: scale(1.1);
+  }
+  /* Stars decoration */
+  .star {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    opacity: 0.8;
+  }
+  .star1 { top: 10px; left: 10px; background: #ffd6e0; }
+  .star2 { top: 10px; right: 10px; background: #a8d8ff; }
+  .star3 { bottom: 10px; left: 10px; background: #ffe066; }
+  .star4 { bottom: 10px; right: 10px; background: #b2f7ef; }
 </style>
 </head>
-
 <body>
-<div class="container">
-  <h1>Sena Photobooth</h1>
-
-  <!-- Camera -->
-  <div id="camera">
+  <div id="booth">
+    <div id="title">Sena Photobooth</div>
+    <div class="star star1"></div>
+    <div class="star star2"></div>
+    <div class="star star3"></div>
+    <div class="star star4"></div>
     <video id="video" autoplay></video>
-    <div id="flash"></div>
-  </div>
-  <button id="capture">Take Photo</button>
-  <button id="retake">Retake</button>
-  <button id="switch">Switch Box</button>
-  <button id="finish">Finish & Download</button>
-
-  <!-- Thumbnails -->
-  <div id="thumbnails"></div>
-
-  <!-- Stickers -->
-  <div id="stickers">
-    <span class="sticker">😺</span>
-    <span class="sticker">👓</span>
-    <span class="sticker">👑</span>
-    <span class="sticker">🎀</span>
-  </div>
-
-  <!-- Download Page -->
-  <div id="download-page">
-    <div id="frame">
-      <div id="frame-title">Sena Photobooth</div>
-      <!-- Stars decoration -->
-      <div class="star yellow" id="star1">★</div>
-      <div class="star pink" id="star2">★</div>
-      <div class="star blue" id="star3">★</div>
-      <div class="star yellow" id="star4">★</div>
-      <!-- Extra floating stars -->
-      <div class="floating-star yellow" style="top:50px;left:150px">★</div>
-      <div class="floating-star blue" style="top:120px;right:80px">★</div>
-      <div class="floating-star pink" style="bottom:150px;left:120px">★</div>
-      <div class="floating-star yellow" style="bottom:200px;right:100px">★</div>
+    <div id="countdown">3</div>
+    <div class="controls">
+      <button onclick="startSequence()">📸 Take Photos</button>
+      <button onclick="switchCamera()">🔄 Switch</button>
+      <button onclick="retake()">♻️ Retake</button>
+      <button onclick="downloadPhotos()">⬇️ Download</button>
+      <button onclick="printPhotos()">🖨️ Print</button>
     </div>
-    <button id="print">Print</button>
-    <button id="download">Download</button>
+    <div id="sticker-options">
+      <span>🌸</span>
+      <span>🎀</span>
+      <span>✨</span>
+      <span>🍓</span>
+      <span>🐻</span>
+      <span>🌼</span>
+      <span>💙</span>
+    </div>
+    <div id="previews"></div>
   </div>
-</div>
 
 <script>
-const video = document.getElementById('video');
-const flash = document.getElementById('flash');
-const captureBtn = document.getElementById('capture');
-const retakeBtn = document.getElementById('retake');
-const switchBtn = document.getElementById('switch');
-const finishBtn = document.getElementById('finish');
-const thumbnails = document.getElementById('thumbnails');
-const downloadPage = document.getElementById('download-page');
-const frame = document.getElementById('frame');
-const downloadBtn = document.getElementById('download');
-const printBtn = document.getElementById('print');
-let photos = [];
+  const video = document.getElementById('video');
+  const previews = document.getElementById('previews');
+  const countdownEl = document.getElementById('countdown');
+  let stream;
+  let facingMode = "user";
 
-// Webcam
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => { video.srcObject = stream; })
-  .catch(err => console.error("Camera error:", err));
+  async function initCamera() {
+    if(stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+    video.srcObject = stream;
+  }
+  initCamera();
 
-// Flash effect
-function doFlash() {
-  flash.style.opacity = 1;
-  setTimeout(()=> flash.style.opacity = 0, 200);
-}
+  function switchCamera() {
+    facingMode = facingMode === "user" ? "environment" : "user";
+    initCamera();
+  }
 
-// Capture photo
-captureBtn.onclick = () => {
-  doFlash();
-  let canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  let ctx = canvas.getContext('2d');
-  ctx.drawImage(video, 0, 0);
-  let data = canvas.toDataURL('image/png');
-  photos.push(data);
+  function startSequence() {
+    previews.innerHTML = "";
+    takePhoto(1);
+  }
 
-  let img = document.createElement('img');
-  img.src = data;
-  thumbnails.appendChild(img);
-};
+  function takePhoto(n) {
+    if(n > 6) return;
+    let count = 3;
+    countdownEl.style.display = "block";
+    countdownEl.innerText = count;
+    let interval = setInterval(() => {
+      count--;
+      if(count > 0) {
+        countdownEl.innerText = count;
+      } else {
+        clearInterval(interval);
+        countdownEl.style.display = "none";
+        capture(n);
+        setTimeout(()=>takePhoto(n+1), 1500);
+      }
+    }, 1000);
+  }
 
-// Retake (clear last photo)
-retakeBtn.onclick = () => {
-  photos.pop();
-  thumbnails.lastChild?.remove();
-};
+  function capture(n) {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video,0,0);
+    const img = document.createElement('img');
+    img.src = canvas.toDataURL('image/png');
+    const frame = document.createElement('div');
+    frame.className = "preview";
+    frame.appendChild(img);
+    const caption = document.createElement('p');
+    caption.innerText = "Photo " + n;
+    frame.appendChild(caption);
+    previews.appendChild(frame);
+  }
 
-// Switch Box (just clears thumbnails for demo)
-switchBtn.onclick = () => {
-  photos = [];
-  thumbnails.innerHTML = "";
-};
+  function retake() {
+    previews.innerHTML = "";
+  }
 
-// Finish
-finishBtn.onclick = () => {
-  frame.querySelectorAll('.photo').forEach(p => p.remove());
-  photos.forEach(src => {
-    let div = document.createElement('div');
-    div.className = 'photo';
-    div.style.backgroundImage = `url(${src})`;
-    frame.appendChild(div);
-  });
-  downloadPage.style.display = 'block';
-  window.scrollTo(0,document.body.scrollHeight);
-};
+  function downloadPhotos() {
+    const zipName = "Sena-Photobooth.zip";
+    // Mock (จริง ๆ ต้องใช้ JSZip library)
+    alert("Download " + zipName);
+  }
 
-// Stickers draggable
-document.querySelectorAll('.sticker').forEach(sticker => {
-  sticker.onclick = () => {
-    let span = sticker.cloneNode(true);
-    span.classList.add('sticker-on-frame');
-    span.style.top = "50px";
-    span.style.left = "50px";
-    frame.appendChild(span);
-
-    let isDragging = false;
-    span.onmousedown = e => {
-      isDragging = true;
-      let offsetX = e.offsetX, offsetY = e.offsetY;
-      document.onmousemove = ev => {
-        if(isDragging){
-          span.style.left = ev.pageX - frame.offsetLeft - offsetX + "px";
-          span.style.top = ev.pageY - frame.offsetTop - offsetY + "px";
-        }
-      };
-      document.onmouseup = () => { isDragging = false; };
-    };
-  };
-});
-
-// Download
-downloadBtn.onclick = () => {
-  alert("💾 Downloading photo strip...");
-};
-
-// Print
-printBtn.onclick = () => {
-  window.print();
-};
+  function printPhotos() {
+    const w = window.open();
+    previews.querySelectorAll("img").forEach(img => {
+      w.document.write("<img src='"+img.src+"' style='width:200px;margin:5px;border:2px solid #a8d8ff;border-radius:10px;'>");
+    });
+    w.print();
+  }
 </script>
 </body>
 </html>

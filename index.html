@@ -8,161 +8,130 @@
 <style>
 body {
   margin: 0; padding: 0;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Arial Rounded MT Bold', sans-serif;
   text-align: center;
+  background: linear-gradient(180deg,#e6f6ff 0%, #ffffff 100%);
+  color: #3a6ea5;
 }
-
-/* ----- Capture Page ----- */
-#capture-page {
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  height: 100vh;
-  background: #ffeef2; /* pastel pink */
-}
-
 h1 {
-  font-family: 'Courier New', monospace;
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #444;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 34px;
+  margin: 20px 0;
+  color: #3a6ea5;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-
-#booth {
-  width: 420px;
-  height: 320px;
-  background: #000;
-  border: 8px solid #fff;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#video {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-#countdown {
-  position: absolute;
-  font-size: 64px;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(0,0,0,0.8);
-  display: none;
-}
-
 button {
-  margin-top: 20px;
+  margin: 12px;
   padding: 12px 24px;
   font-size: 18px;
   border: none;
-  border-radius: 8px;
+  border-radius: 25px;
   cursor: pointer;
-  background: #444;
+  background: #3a6ea5;
   color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transition: 0.3s;
 }
-button:hover { background: #666; }
+button:hover { background: #2b4f77; }
 
-.flash {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: white;
-  display: none;
+/* Layout choice page */
+#layout-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
-
-/* ----- Download Page ----- */
-#download-page {
-  display: none;
-  padding: 20px;
-  background: #eafff5; /* pastel mint */
-  min-height: 100vh;
+.layout-options {
+  display: flex;
+  gap: 20px;
 }
+.layout-box {
+  width: 140px; height: 200px;
+  border: 3px solid #3a6ea5;
+  border-radius: 10px;
+  display: grid;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.layout-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.layout-a { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.layout-b { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+.layout-c { grid-template-rows: 1fr; }
 
+/* Capture page */
+#capture-page { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
+#booth {
+  width: 420px; height: 320px;
+  background: #000; border: 8px solid #fff; border-radius: 20px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.2);
+  position: relative; overflow: hidden;
+  display: flex; justify-content: center; align-items: center;
+}
+#video { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+#countdown {
+  position: absolute; font-size: 72px; color: #fff; font-weight: bold;
+  text-shadow: 0 0 15px rgba(0,0,0,0.8); display: none;
+}
+.flash { position: absolute; top:0; left:0; width:100%; height:100%; background:white; display:none; }
+#previews { margin-top: 15px; display: flex; justify-content: center; gap: 8px; }
+
+/* Download page */
+#download-page { display: none; padding: 20px; background: #f0faff; min-height: 100vh; }
 #frame {
   width: 600px; height: 900px;
-  margin: 20px auto;
-  border-radius: 24px;
-  background: linear-gradient(180deg, #fff 0%, #fff8f9 100%);
+  margin: 20px auto; border-radius: 24px;
+  background: linear-gradient(180deg, #fff 0%, #f0f8ff 100%);
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 20px;
-  border: 6px solid #ffd6e0; /* pastel pink border */
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  position: relative; padding: 20px; border: 6px solid #cce6ff;
 }
-
-/* Photos */
 .photo {
-  width: 45%; height: 28%;
-  margin: 8px;
-  background-size: cover;
-  background-position: center;
-  border: 3px solid #f2f2f2;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  position: relative;
-  overflow: hidden;
+  margin: 6px; background-size: cover; background-position: center;
+  border: 3px solid #f2f2f2; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: relative; overflow: hidden;
 }
-
-/* Stickers */
-.sticker {
-  position: absolute;
-  top: 5px; left: 5px;
-  font-size: 32px;
-  cursor: move;
-  user-select: none;
+#frame-title {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  font-size: 28px; font-weight: bold; color: #3a6ea5;
 }
-
-/* Logo */
-#logo {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 22px;
-  font-weight: bold;
-  color: #555;
-  opacity: 0.9;
-  padding-top: 8px;
-  border-top: 1px dashed #ccc;
-}
-
-/* Cute decorations */
-.decoration {
-  position: absolute;
-  font-size: 28px;
-  opacity: 0.7;
-}
-.decoration.star { color: #ffc9d9; }
-.decoration.heart { color: #a2e8dd; }
-.decoration.blue { color: #c7e5ff; }
-
-/* Positions */
-#dec1 { top: 12px; left: 12px; }
-#dec2 { top: 12px; right: 12px; }
-#dec3 { bottom: 60px; left: 12px; }
-#dec4 { bottom: 60px; right: 12px; }
-
-/* Sticker options */
-#sticker-options {
-  margin: 20px 0;
-}
-#sticker-options span {
-  font-size: 28px;
-  margin: 0 8px;
-  cursor: pointer;
-}
+.decoration { position: absolute; font-size: 28px; color: #ffcd4c; }
+#dec1 { top: 10px; left: 10px; } #dec2 { top: 10px; right: 10px; }
+#dec3 { bottom: 10px; left: 10px; } #dec4 { bottom: 10px; right: 10px; }
+.sticker { position: absolute; top: 5px; left: 5px; font-size: 32px; cursor: move; user-select: none; }
+#sticker-options { margin: 20px 0; }
+#sticker-options span { font-size: 28px; margin: 0 8px; cursor: pointer; }
 </style>
 </head>
 <body>
+
+<!-- Layout choice -->
+<div id="layout-page">
+  <h1>Select Layout</h1>
+  <div class="layout-options">
+    <div class="layout-box layout-a" onclick="chooseLayout('A')">
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+    </div>
+    <div class="layout-box layout-b" onclick="chooseLayout('B')">
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+      <div style="border:1px solid #ccc"></div>
+    </div>
+    <div class="layout-box layout-c" onclick="chooseLayout('C')">
+      <div style="border:1px solid #ccc; height:100%"></div>
+    </div>
+  </div>
+</div>
 
 <!-- Capture Page -->
 <div id="capture-page">
@@ -172,142 +141,132 @@ button:hover { background: #666; }
     <div id="countdown">3</div>
     <div class="flash" id="flash"></div>
   </div>
-  <button onclick="startCapture()">Start</button>
+  <div>
+    <button onclick="startCapture()">Start</button>
+    <button onclick="retake()">Retake</button>
+    <button onclick="switchCamera()">Switch Camera</button>
+  </div>
+  <div id="previews"></div>
 </div>
 
 <!-- Download Page -->
 <div id="download-page">
   <h1>Your Photobooth Photos</h1>
   <div id="frame">
-    <div class="decoration star" id="dec1">★</div>
-    <div class="decoration blue" id="dec2">✦</div>
-    <div class="decoration heart" id="dec3">❤</div>
-    <div class="decoration star" id="dec4">✦</div>
-    <div id="logo">Sena Photobooth</div>
+    <div id="frame-title">Sena Photobooth</div>
+    <div class="decoration" id="dec1">⭐</div>
+    <div class="decoration" id="dec2">⭐</div>
+    <div class="decoration" id="dec3">⭐</div>
+    <div class="decoration" id="dec4">⭐</div>
   </div>
-
-  <!-- Sticker options -->
   <div id="sticker-options">
-    <p>Add stickers to your photos:</p>
+    <p>Add stickers:</p>
     <span onclick="addSticker('🐱')">🐱</span>
     <span onclick="addSticker('👓')">👓</span>
     <span onclick="addSticker('👑')">👑</span>
     <span onclick="addSticker('💖')">💖</span>
     <span onclick="addSticker('🌸')">🌸</span>
   </div>
-
   <button onclick="download()">Download</button>
+  <button onclick="printPhotos()">Print</button>
 </div>
 
 <script>
-let video = document.getElementById("video");
-let countdown = document.getElementById("countdown");
-let flash = document.getElementById("flash");
-let photos = [];
+let video=document.getElementById("video");
+let countdown=document.getElementById("countdown");
+let flash=document.getElementById("flash");
+let photos=[]; let currentStream; let usingFront=true;
+let chosenLayout="B"; // default
 
-// Start webcam
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => video.srcObject = stream);
-
-// Take photo
-async function takePhoto() {
-  return new Promise(resolve => {
-    let canvas = document.createElement("canvas");
-    canvas.width = 420;
-    canvas.height = 320;
-    let ctx = canvas.getContext("2d");
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+function chooseLayout(layout){
+  chosenLayout=layout;
+  document.getElementById("layout-page").style.display="none";
+  document.getElementById("capture-page").style.display="flex";
+  startCamera();
+}
+function startCamera(){
+  if(currentStream){ currentStream.getTracks().forEach(track=>track.stop()); }
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode: usingFront?"user":"environment"}})
+  .then(stream=>{ currentStream=stream; video.srcObject=stream; });
+}
+async function takePhoto(){
+  return new Promise(resolve=>{
+    let canvas=document.createElement("canvas");
+    canvas.width=420; canvas.height=320;
+    let ctx=canvas.getContext("2d");
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
     resolve(canvas.toDataURL("image/png"));
   });
 }
-
-// Capture sequence
-async function startCapture() {
-  photos = [];
-  for (let i = 0; i < 6; i++) {
+async function startCapture(){
+  photos=[];
+  let total = chosenLayout==="A"?4:chosenLayout==="B"?6:1;
+  let previews=document.getElementById("previews"); previews.innerHTML="";
+  for(let i=0;i<total;i++){
     await showCountdown();
-    flash.style.display = "block";
-    setTimeout(() => flash.style.display = "none", 200);
-    let photo = await takePhoto();
-    photos.push(photo);
-    await new Promise(r => setTimeout(r, 1000));
+    flash.style.display="block"; setTimeout(()=>flash.style.display="none",200);
+    let photo=await takePhoto(); photos.push(photo);
+    let pv=document.createElement("div");
+    pv.className="preview"; pv.style.width="60px"; pv.style.height="40px";
+    pv.style.backgroundImage="url("+photo+")";
+    previews.appendChild(pv);
+    await new Promise(r=>setTimeout(r,1000));
   }
   showDownloadPage();
 }
-
-// Countdown
-function showCountdown() {
-  return new Promise(resolve => {
-    let num = 3;
-    countdown.style.display = "block";
-    countdown.innerText = num;
-    let timer = setInterval(() => {
-      num--;
-      if (num === 0) {
-        clearInterval(timer);
-        countdown.style.display = "none";
-        resolve();
-      } else {
-        countdown.innerText = num;
-      }
-    }, 1000);
+function showCountdown(){
+  return new Promise(resolve=>{
+    let num=3; countdown.style.display="block"; countdown.innerText=num;
+    let timer=setInterval(()=>{
+      num--; if(num===0){clearInterval(timer); countdown.style.display="none"; resolve();}
+      else{countdown.innerText=num;}
+    },1000);
   });
 }
-
-// Switch to Download Page
-function showDownloadPage() {
-  document.getElementById("capture-page").style.display = "none";
-  document.getElementById("download-page").style.display = "block";
-  let frame = document.getElementById("frame");
-  photos.forEach(p => {
-    let div = document.createElement("div");
-    div.className = "photo";
-    div.style.backgroundImage = "url(" + p + ")";
-    frame.insertBefore(div, document.getElementById("logo"));
+function showDownloadPage(){
+  document.getElementById("capture-page").style.display="none";
+  document.getElementById("download-page").style.display="block";
+  let frame=document.getElementById("frame");
+  frame.querySelectorAll(".photo").forEach(p=>p.remove());
+  let total=photos.length;
+  photos.forEach(p=>{
+    let div=document.createElement("div");
+    div.className="photo";
+    if(chosenLayout==="A"){div.style.width="45%"; div.style.height="45%";}
+    if(chosenLayout==="B"){div.style.width="45%"; div.style.height="28%";}
+    if(chosenLayout==="C"){div.style.width="90%"; div.style.height="80%";}
+    div.style.backgroundImage="url("+p+")";
+    frame.appendChild(div);
   });
 }
-
-// Add stickers
-function addSticker(emoji) {
-  let photosEls = document.querySelectorAll(".photo");
-  if (photosEls.length > 0) {
-    let lastPhoto = photosEls[photosEls.length - 1];
-    let sticker = document.createElement("div");
-    sticker.className = "sticker";
-    sticker.innerText = emoji;
-    lastPhoto.appendChild(sticker);
-
-    // Make sticker draggable
-    sticker.onmousedown = function(e) {
-      e.preventDefault();
-      let shiftX = e.clientX - sticker.getBoundingClientRect().left;
-      let shiftY = e.clientY - sticker.getBoundingClientRect().top;
-      function moveAt(pageX, pageY) {
-        sticker.style.left = pageX - shiftX - lastPhoto.getBoundingClientRect().left + "px";
-        sticker.style.top = pageY - shiftY - lastPhoto.getBoundingClientRect().top + "px";
-      }
-      function onMouseMove(e) {
-        moveAt(e.pageX, e.pageY);
-      }
-      document.addEventListener("mousemove", onMouseMove);
-      sticker.onmouseup = function() {
-        document.removeEventListener("mousemove", onMouseMove);
-        sticker.onmouseup = null;
-      };
-    };
-    sticker.ondragstart = () => false;
-  }
+function retake(){ photos=[]; document.getElementById("previews").innerHTML=""; }
+function switchCamera(){ usingFront=!usingFront; startCamera(); }
+function addSticker(emoji){
+  let frame=document.getElementById("frame");
+  let sticker=document.createElement("div");
+  sticker.className="sticker"; sticker.innerText=emoji; frame.appendChild(sticker);
+  sticker.onmousedown=function(e){
+    e.preventDefault();
+    let shiftX=e.clientX-sticker.getBoundingClientRect().left;
+    let shiftY=e.clientY-sticker.getBoundingClientRect().top;
+    function moveAt(pageX,pageY){
+      sticker.style.left=pageX-shiftX-frame.getBoundingClientRect().left+"px";
+      sticker.style.top=pageY-shiftY-frame.getBoundingClientRect().top+"px";
+    }
+    function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
+    document.addEventListener("mousemove",onMouseMove);
+    sticker.onmouseup=function(){ document.removeEventListener("mousemove",onMouseMove); sticker.onmouseup=null; };
+  };
+  sticker.ondragstart=()=>false;
 }
-
-// Download
-function download() {
-  html2canvas(document.querySelector("#frame")).then(canvas => {
-    let link = document.createElement("a");
-    link.download = "sena_photobooth.png";
-    link.href = canvas.toDataURL();
-    link.click();
+function download(){
+  html2canvas(document.querySelector("#frame")).then(canvas=>{
+    let link=document.createElement("a");
+    link.download="sena_photobooth.png";
+    link.href=canvas.toDataURL(); link.click();
   });
 }
+function printPhotos(){ window.print(); }
 </script>
 </body>
 </html>

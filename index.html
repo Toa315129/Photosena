@@ -1,543 +1,206 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tomoji / Sena Photobooth</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SENA PHOTOBOOTH</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#fbf8f4;
-  --accent:#66aee7;   /* ฟ้าพาสเทล */
-  --accent-dark:#2b7fc3;
-  --mint:#90c9a7;
-  --pink:#ffd6e8;
-  --text:#222;
-  --card:#ffffff;
+  --bg:#fdfaf4;      
+  --blue:#a7d8f7;    
+  --pink:#ffd6e8;    
+  --text:#333333;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:"Quicksand",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
-.container{max-width:1100px;margin:24px auto;padding:20px;background:var(--card);border-radius:14px;border:6px solid rgba(102,174,231,0.18);box-shadow:0 16px 40px rgba(0,0,0,0.06)}
-.header{display:flex;align-items:center;gap:16px;justify-content:center;margin-bottom:18px}
-.logo{width:72px;height:72px;border-radius:14px;background:linear-gradient(180deg,#fff,#f0f8ff);display:flex;align-items:center;justify-content:center;border:3px solid rgba(43,127,195,0.12)}
-.logo svg{width:56px;height:56px}
-.title{font-size:24px;font-weight:700;color:var(--accent-dark);text-align:center}
-.subtitle{font-size:13px;color:rgba(0,0,0,0.55);text-align:center}
-
-/* STEP 1 - choose */
-.center{text-align:center}
-.choices{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.choice{
-  width:160px;height:220px;background:linear-gradient(180deg,#fff,#f7fbff);
-  border-radius:12px;border:3px solid rgba(102,174,231,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 8px 18px rgba(0,0,0,0.04);transition:transform .14s,box-shadow .14s;
-}
-.choice:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.08)}
-.choice .mock{width:84%;height:70%;background:#fff;border-radius:10px;border:4px dashed rgba(144,201,167,0.25);display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:6px}
-.choice .label{margin-top:10px;font-weight:700;color:var(--accent-dark)}
-
-/* capture area */
-.capture-wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
-.preview{
-  width:420px;height:560px;border-radius:14px;overflow:hidden;border:6px solid rgba(144,201,167,0.12);position:relative;background:#000;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;background:var(--bg);
+  font-family:"Quicksand",sans-serif;
   display:flex;align-items:center;justify-content:center;
 }
-video{width:100%;height:100%;object-fit:cover;display:block}
-.countdown{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;color:var(--accent);font-weight:800;text-shadow:0 8px 30px rgba(0,0,0,0.25)}
-.flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .18s}
+.container{
+  width:100%;max-width:960px;
+  background:var(--bg);
+  border-radius:18px;
+  padding:18px;
+  border:5px solid var(--blue);
+  position:relative;
+}
+
+/* header */
+.header{text-align:center;margin-bottom:20px;position:relative;}
+.brand-box{
+  display:inline-block;
+  padding:12px 24px;
+  background:var(--blue);
+  border-radius:8px;
+}
+.brand{
+  font-size:42px;font-weight:700;
+  color:#fff;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+/* หน้าเลือกจำนวนรูป */
+.choose{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  margin-top:40px;
+}
+.choice{
+  width:100px;height:140px;
+  background:#fff;
+  border:3px solid var(--blue);
+  border-radius:12px;
+  display:flex;
+  align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;
+  color:var(--text);
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+.choice:hover{background:var(--pink);color:#fff;}
+
+/* กล้อง */
+.main{display:none;flex-direction:column;align-items:center;gap:18px;}
+.preview{
+  width:100%;max-width:480px;
+  border-radius:14px;overflow:hidden;
+  background:#fff;border:4px solid var(--blue);
+  aspect-ratio:3/4;position:relative;
+}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.countdown{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;color:var(--pink);font-weight:700;
+}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity 0.18s}
 .flash.show{opacity:0.85}
 
-/* controls: keep only big shutter */
-.controls{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:12px}
+/* controls */
+.controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.btn{
+  padding:10px 14px;border-radius:12px;border:2px solid var(--blue);
+  background:#fff;color:var(--text);font-weight:600;cursor:pointer;
+  transition:all 0.2s ease;font-family:"Quicksand",sans-serif;
+}
+.btn:hover:not(:disabled){background:var(--pink);color:#fff;}
+.btn:disabled{opacity:0.55;cursor:not-allowed}
 .shutter{
-  width:110px;height:110px;border-radius:50%;background:#fff;border:8px solid var(--accent);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  width:80px;height:80px;border-radius:50%;
+  background:#fff;border:5px solid var(--blue);
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  margin-top:10px;
 }
-.shutter:active{transform:scale(.98)}
-.small-note{font-size:13px;color:rgba(0,0,0,0.6)}
+.shutter:hover{background:var(--pink);}
+.gallery{margin-top:20px;display:flex;gap:10px}
+.thumb{width:90px;aspect-ratio:3/4;border:3px solid var(--blue);border-radius:12px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.thumb img{width:100%;height:100%;object-fit:cover;}
 
-/* final area */
-.final-wrap{max-width:760px;margin:18px auto;text-align:center}
-.canvas-wrap{display:flex;align-items:center;justify-content:center}
-.controls-row{display:flex;gap:10px;justify-content:center;margin-top:12px}
-.small-btn{
-  background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;
-}
-.small-btn.secondary{background:#fff;color:var(--accent);border:2px solid var(--accent);}
-
-/* gallery (local storage) */
-.gallery{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-.gitem{width:84px;height:112px;border-radius:8px;overflow:hidden;border:3px solid rgba(0,0,0,0.06);background:#fff;display:flex;align-items:center;justify-content:center}
-
-/* footer */
-.credit{margin-top:14px;text-align:center;font-family:"Great Vibes",cursive;color:rgba(0,0,0,0.5)}
-
-/* responsive */
-@media(max-width:900px){
-  .preview{width:320px;height:420px}
-  .choice{width:140px;height:200px}
-}
 </style>
 </head>
 <body>
-
-<div class="container" role="application" aria-label="Tomoji / Sena Photobooth">
+<div class="container">
   <div class="header">
-    <div class="logo" aria-hidden="true">
-      <!-- little clover emblem -->
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g fill="#2ea36a"><path d="M32 6c4.5-0.1 7.7 3.5 9 6.9 2.2 4.6-1.4 11-7.5 11S23.2 17 21 12.4C19.7 9 23.3 6.1 32 6z"/><path d="M32 6c-4.5-0.1-7.7 3.5-9 6.9-2.2 4.6 1.4 11 7.5 11s11.3-6.9 13.5-11.5C44.7 9 41.1 6.1 32 6z"/></g>
-        <path d="M32 34c-1.6 0-2.9 1.3-2.9 2.9 0 2.2 2.9 6.5 2.9 6.5s2.9-4.3 2.9-6.5C34.9 35.3 33.6 34 32 34z" fill="#2ea36a"/>
-      </svg>
-    </div>
-    <div>
-      <div class="title">TOMOJI STUDIO</div>
-      <div class="subtitle">น่ารัก มินิมอล — Photobooth</div>
-    </div>
+    <div class="brand-box"><div class="brand">SENA PHOTOBOOTH</div></div>
   </div>
 
-  <!-- STEP 1: choose count -->
-  <section id="stepChoose" class="center">
-    <div style="font-weight:700;font-size:18px">เลือกจำนวนรูปที่ต้องการ</div>
-    <div class="choices" id="choices">
-      <!-- choices generated by JS -->
+  <!-- หน้าแรก เลือกจำนวนรูป -->
+  <div id="start" class="choose">
+    <div class="choice" data-n="2">2</div>
+    <div class="choice" data-n="4">4</div>
+    <div class="choice" data-n="6">6</div>
+  </div>
+
+  <!-- กล้อง -->
+  <div id="main" class="main">
+    <div class="preview">
+      <video id="video" autoplay playsinline></video>
+      <div class="countdown" id="countdown"></div>
+      <div class="flash" id="flash"></div>
     </div>
-    <div style="margin-top:10px;font-size:13px;color:rgba(0,0,0,0.6)">การเลือกจะกำหนดรูปแบบกรอบ (2 / 4 / 6 ช่อง)</div>
-  </section>
-
-  <!-- STEP 2: capture -->
-  <section id="stepCapture" class="hidden">
-    <div class="capture-wrap">
-      <div class="preview" aria-live="polite">
-        <video id="video" autoplay playsinline></video>
-        <div class="countdown" id="countdown" aria-hidden="true"></div>
-        <div class="flash" id="flash" aria-hidden="true"></div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div class="controls">
-          <div class="shutter" id="shutter" title="ถ่าย"></div>
-          <div class="small-note">กดวงกลมเพื่อเริ่มถ่าย</div>
-        </div>
-        <div style="margin-top:8px;font-size:13px;color:rgba(0,0,0,0.6)">
-          ฟิลเตอร์:
-          <select id="filterSelect" style="padding:6px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);margin-left:6px">
-            <option value="none">ปกติ</option>
-            <option value="pastel">Pastel</option>
-            <option value="bw">B & W</option>
-            <option value="film">Film</option>
-          </select>
-        </div>
-        <div style="margin-top:8px">
-          <button class="small-btn secondary" id="backChoose">กลับ</button>
-        </div>
-      </div>
+    <div class="controls">
+      <div class="shutter" id="shutter"></div>
+      <button class="btn" id="retake" disabled>ถ่ายใหม่</button>
+      <button class="btn" id="download" disabled>ดาวน์โหลด</button>
     </div>
-  </section>
-
-  <!-- STEP 3: final -->
-  <section id="stepFinal" class="hidden">
-    <div class="final-wrap">
-      <div style="font-weight:700">ผลลัพธ์ — บันทึก / ปริ้น / แชร์</div>
-      <div class="canvas-wrap" style="margin-top:12px">
-        <canvas id="finalCanvas" width="1200" height="1800" style="max-width:420px;border-radius:8px"></canvas>
-      </div>
-
-      <div class="controls-row">
-        <button class="small-btn" id="downloadBtn">Download</button>
-        <button class="small-btn secondary" id="printBtn">Print</button>
-        <button class="small-btn" id="qrBtn">QR Code</button>
-        <button class="small-btn secondary" id="saveLocalBtn">Save (Local)</button>
-        <button class="small-btn" id="clearLocalBtn">ล้าง Gallery</button>
-      </div>
-
-      <div id="qrcode" style="margin-top:10px"></div>
-
-      <div style="margin-top:14px">
-        <div style="font-weight:700;margin-bottom:8px">Gallery (รูปที่บันทึก)</div>
-        <div class="gallery" id="localGallery"></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="credit">@tomoji studio</div>
+    <div class="gallery" id="thumbs"></div>
+  </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<audio id="snap" src="https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3" preload="auto"></audio>
+
 <script>
-/* =========================
-   Photobooth - single file
-   - stepChoose -> stepCapture -> stepFinal
-   - supports 2/4/6 grid, filters, stickers, QR, local save, print
-   - final canvas exported at 1200 x 1800 (4x6-like)
-   ========================= */
+const start=document.getElementById('start');
+const main=document.getElementById('main');
+const video=document.getElementById('video');
+const shutter=document.getElementById('shutter');
+const retakeBtn=document.getElementById('retake');
+const downloadBtn=document.getElementById('download');
+const countdownEl=document.getElementById('countdown');
+const flash=document.getElementById('flash');
+const snap=document.getElementById('snap');
+const thumbs=document.getElementById('thumbs');
 
-const CHOICES = [2,4,6];
-const choicesEl = document.getElementById('choices');
-const stepChoose = document.getElementById('stepChoose');
-const stepCapture = document.getElementById('stepCapture');
-const stepFinal = document.getElementById('stepFinal');
-const video = document.getElementById('video');
-const shutter = document.getElementById('shutter');
-const countdownEl = document.getElementById('countdown');
-const flashEl = document.getElementById('flash');
-const filterSelect = document.getElementById('filterSelect');
+let captures=[],totalShots=3,stream=null;
 
-const finalCanvas = document.getElementById('finalCanvas');
-const ctxFinal = finalCanvas.getContext('2d');
-
-const downloadBtn = document.getElementById('downloadBtn');
-const printBtn = document.getElementById('printBtn');
-const qrBtn = document.getElementById('qrBtn');
-const qrcodeContainer = document.getElementById('qrcode');
-const saveLocalBtn = document.getElementById('saveLocalBtn');
-const clearLocalBtn = document.getElementById('clearLocalBtn');
-const localGallery = document.getElementById('localGallery');
-const backChoose = document.getElementById('backChoose');
-
-let selectedCount = 2;
-let captures = [];
-let stream = null;
-let useFront = true;
-let stickerSeed = null; // for randomized decoration
-
-/* build choices UI (visual mock frames) */
-function buildChoices(){
-  choicesEl.innerHTML = '';
-  CHOICES.forEach(n=>{
-    const card = document.createElement('div');
-    card.className = 'choice';
-    card.title = `${n} รูป`;
-    const mock = document.createElement('div'); mock.className = 'mock';
-    // draw boxes according to n (arrange into 2 columns)
-    const cols = 2;
-    const rows = Math.ceil(n/cols);
-    for(let i=0;i<cols*rows;i++){
-      const cell = document.createElement('div');
-      cell.style.background = 'linear-gradient(180deg,#f8fbff,#ffffff)';
-      cell.style.borderRadius = '6px';
-      // hide extra cells if > n
-      if(i >= n) cell.style.opacity = '0';
-      mock.appendChild(cell);
-    }
-    const label = document.createElement('div'); label.className='label'; label.innerText = `${n} ช่อง`;
-    card.appendChild(mock); card.appendChild(label);
-    card.addEventListener('click', ()=> chooseCount(n));
-    choicesEl.appendChild(card);
-  });
-}
-buildChoices();
-
-function chooseCount(n){
-  selectedCount = n;
-  stepChoose.classList.add('hidden');
-  stepCapture.classList.remove('hidden');
-  captures = [];
-  stickerSeed = Math.floor(Math.random()*100000);
-  startCamera();
-}
-
-/* camera start */
 async function startCamera(){
+  if(stream){stream.getTracks().forEach(t=>t.stop());}
   try{
-    if (stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: useFront ? 'user' : 'environment' }, audio: false });
-    video.srcObject = stream;
-    await video.play();
-  }catch(e){
-    alert('ไม่สามารถเปิดกล้องได้: ' + (e && e.message ? e.message : e));
-  }
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+    video.srcObject=stream;
+  }catch(e){alert("ไม่สามารถเปิดกล้องได้");}
 }
-backChoose.addEventListener('click', ()=>{
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  stepCapture.classList.add('hidden');
-  stepChoose.classList.remove('hidden');
-});
-
-/* countdown & flash */
-function showCount(n){ countdownEl.innerText = n; }
-function hideCount(){ countdownEl.innerText = ''; }
-function doFlash(){ flashEl.classList.add('show'); setTimeout(()=>flashEl.classList.remove('show'),150); new Audio('https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3').play().catch(()=>{}); }
-
-/* filter mapping for canvas ctx.filter and CSS preview */
-const FILTERS = {
-  none: {css:'none', ctx:'none'},
-  pastel: {css:'contrast(0.95) saturate(0.9) brightness(1.02) hue-rotate(-10deg)', ctx:'contrast(0.95) saturate(0.9) brightness(1.02) hue-rotate(-10deg)'},
-  bw: {css:'grayscale(1)', ctx:'grayscale(1)'},
-  film: {css:'contrast(1.08) saturate(1.1) sepia(.06)', ctx:'contrast(1.08) saturate(1.1) sepia(.06)'}
-};
-filterSelect.addEventListener('change', ()=>{
-  video.style.filter = FILTERS[filterSelect.value].css;
-});
-
-/* capture frame from video (no mirror: transform done to image to correct) */
 function captureFrame(){
-  const vw = video.videoWidth, vh = video.videoHeight;
-  const c = document.createElement('canvas'); c.width = vw; c.height = vh;
-  const ctx = c.getContext('2d');
-
-  // apply filter to canvas draw
-  ctx.filter = FILTERS[filterSelect.value].ctx || 'none';
-
-  // draw mirrored to correct preview flip
-  ctx.translate(c.width, 0); ctx.scale(-1, 1);
-  ctx.drawImage(video, 0, 0, c.width, c.height);
-
+  const c=document.createElement('canvas');
+  c.width=video.videoWidth;c.height=video.videoHeight;
+  const ctx=c.getContext('2d');
+  ctx.translate(c.width,0);ctx.scale(-1,1);
+  ctx.drawImage(video,0,0,c.width,c.height);
   return c.toDataURL('image/png');
 }
+function showCount(n){countdownEl.textContent=n;}
+function hideCount(){countdownEl.textContent='';}
+function doFlash(){snap.play().catch(()=>{});flash.classList.add('show');setTimeout(()=>flash.classList.remove('show'),170);}
 
-/* capture sequence: for selectedCount shots with countdown & 1s pause between */
-shutter.addEventListener('click', async ()=>{
-  if(!stream) { alert('กล้องยังไม่พร้อม'); return; }
-  captures = [];
-  for(let i=0;i<selectedCount;i++){
-    for(let s=3;s>=1;s--){ showCount(s); await new Promise(r=>setTimeout(r,1000)); }
-    hideCount();
-    doFlash();
-    const data = captureFrame();
+async function takeSequence(){
+  captures=[]; thumbs.innerHTML='';
+  retakeBtn.disabled=true;downloadBtn.disabled=true;
+  for(let i=0;i<totalShots;i++){
+    for(let s=3;s>=1;s--){showCount(s);await new Promise(r=>setTimeout(r,1000));}
+    hideCount();doFlash();
+    const data=captureFrame();
     captures.push(data);
-    // small pause between shots (1s)
-    if(i < selectedCount-1) await new Promise(r=>setTimeout(r,1000));
+    const div=document.createElement('div');
+    div.className='thumb';div.innerHTML=`<img src="${data}">`;
+    thumbs.appendChild(div);
+    if(i<totalShots-1) await new Promise(r=>setTimeout(r,1000));
   }
-  // done -> build final
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  await buildFinalCanvas();
-  stepCapture.classList.add('hidden');
-  stepFinal.classList.remove('hidden');
-  renderLocalGallery();
-});
-
-/* build final canvas (1200x1800) with polaroid frame and decorations */
-async function buildFinalCanvas(){
-  const W = finalCanvas.width, H = finalCanvas.height;
-  const ctx = ctxFinal;
-  // clear
-  ctx.clearRect(0,0,W,H);
-  // background (light cream)
-  ctx.fillStyle = '#fbf8f4';
-  ctx.fillRect(0,0,W,H);
-
-  // draw header ribbon
-  ctx.fillStyle = '#a7d8f7';
-  roundRect(ctx, (W-760)/2, 60, 760, 120, 12, true, false);
-  ctx.fillStyle = '#fff';
-  ctx.font = '56px "Quicksand"';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('SENA PHOTOBOOTH', W/2, 120);
-
-  // draw small clover near header
-  drawClover(ctx, W/2 - 340, 120, 36);
-
-  // positions: adapt grid: 2 columns
-  const cols = 2;
-  const rows = Math.ceil(selectedCount / cols);
-  const margin = 80;
-  const gap = 28;
-  const boxW = Math.floor((W - margin*2 - (cols-1)*gap) / cols);
-  const boxH = Math.floor((H - margin*2 - 240 - (rows-1)*gap) / rows); // 240 reserved header/footer
-
-  // for each capture draw in slot
-  for(let i=0;i<selectedCount;i++){
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = margin + col*(boxW + gap);
-    const y = 200 + row*(boxH + gap);
-    // draw white polaroid card background
-    ctx.fillStyle = '#ffffff';
-    roundRect(ctx, x, y, boxW, boxH, 12, true, false);
-    // inner image area with small inner margin
-    const innerPad = Math.round(Math.min(boxW, boxH) * 0.04);
-    const ix = x + innerPad, iy = y + innerPad, iw = boxW - innerPad*2, ih = boxH - innerPad*2;
-    // load image
-    if(captures[i]){
-      const img = await loadImgAsync(captures[i]);
-      // compute scale to cover (contain)
-      const scale = Math.min(iw / img.width, ih / img.height);
-      const dw = img.width * scale, dh = img.height * scale;
-      const dx = ix + (iw - dw)/2, dy = iy + (ih - dh)/2;
-      ctx.drawImage(img, dx, dy, dw, dh);
-      // subtle overlay border
-      ctx.strokeStyle = 'rgba(0,0,0,0.04)';
-      ctx.lineWidth = 4;
-      roundRect(ctx, x, y, boxW, boxH, 12, false, true);
-    }
-  }
-
-  // footer credit
-  ctx.fillStyle = '#333';
-  ctx.font = '26px "Quicksand"';
-  ctx.textAlign = 'center';
-  ctx.fillText('@tomoji studio', W/2, H - 50);
-
-  // decorate with randomized small stickers (seeded)
-  drawRandomStickers(ctx, W, H, stickerSeed);
+  retakeBtn.disabled=false;downloadBtn.disabled=false;
 }
 
-/* helper: draw rounded rect */
-function roundRect(ctx,x,y,w,h,r,fill,stroke){
-  if(typeof r==='undefined') r=8;
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.arcTo(x+w,y,x+w,y+h,r);
-  ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r);
-  ctx.arcTo(x,y,x+w,y,r);
-  ctx.closePath();
-  if(fill){ ctx.fill(); }
-  if(stroke){ ctx.stroke(); }
-}
-
-/* helper: load image async */
-function loadImgAsync(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
-
-/* draw small clover emblem (simple) */
-function drawClover(ctx, cx, cy, size){
-  ctx.save();
-  ctx.translate(cx,cy);
-  ctx.fillStyle = '#2ea36a';
-  // four heart-like leaves
-  for(let i=0;i<4;i++){
-    ctx.beginPath();
-    const angle = i * Math.PI/2;
-    const rx = Math.cos(angle)*16, ry = Math.sin(angle)*16;
-    ctx.ellipse(rx, ry, size*0.6, size*0.35, angle + Math.PI/4, 0, Math.PI*2);
-    ctx.fill();
-  }
-  // center sparkle
-  ctx.fillStyle = '#a7d8f7';
-  ctx.beginPath(); ctx.moveTo(0,-6); ctx.lineTo(6,0); ctx.lineTo(0,6); ctx.lineTo(-6,0); ctx.closePath(); ctx.fill();
-  ctx.restore();
-}
-
-/* random small stickers */
-function drawRandomStickers(ctx,W,H,seed){
-  const rnd = mulberry32(seed || Date.now());
-  const icons = ['★','✦','✶','✸','❤','❀','♢','✺'];
-  const colors = ['#ffd6e8','#90c9a7','#a7d8f7','#fff6b7'];
-  const count = 18;
-  ctx.font = '18px "Quicksand"';
-  for(let i=0;i<count;i++){
-    const x = Math.floor(rnd()*W);
-    const y = Math.floor(rnd()*H);
-    const ico = icons[Math.floor(rnd()*icons.length)];
-    ctx.fillStyle = colors[Math.floor(rnd()*colors.length)];
-    ctx.fillText(ico, x, y);
-  }
-}
-
-/* simple deterministic RNG for consistent stickers if same seed */
-function mulberry32(a) {
-  return function() {
-    var t = a += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  }
-}
-
-/* download/export */
-downloadBtn.addEventListener('click', ()=>{
-  const data = finalCanvas.toDataURL('image/png');
-  const a = document.createElement('a');
-  a.href = data;
-  a.download = 'tomoji_photobooth.png';
+shutter.addEventListener('click',takeSequence);
+retakeBtn.addEventListener('click',()=>{captures=[];thumbs.innerHTML='';downloadBtn.disabled=true;retakeBtn.disabled=true;});
+downloadBtn.addEventListener('click',()=>{
+  if(!captures.length) return;
+  const a=document.createElement('a');
+  a.href=captures[0];
+  a.download="photobooth.png";
   a.click();
 });
-
-/* print: open new window with image and trigger print */
-printBtn.addEventListener('click', ()=>{
-  const win = window.open('');
-  const data = finalCanvas.toDataURL('image/png');
-  win.document.write('<html><head><title>Print</title></head><body style="margin:0"><img src="'+data+'" style="width:100%;height:auto"/></body></html>');
-  win.document.close();
-  win.focus();
-  // delay to ensure image loads
-  setTimeout(()=>{ win.print(); win.close(); }, 600);
-});
-
-/* QR: create blob URL and generate QR (object URLs allow some scanners to open; fallback to data URL) */
-qrBtn.addEventListener('click', async ()=>{
-  const dataUrl = finalCanvas.toDataURL('image/png');
-  // create blob for object URL
-  const blob = dataURItoBlob(dataUrl);
-  const blobUrl = URL.createObjectURL(blob);
-  qrcodeContainer.innerHTML = '';
-  // show both links: object URL (preferred) and data URL fallback
-  const qr = new QRCode(qrcodeContainer, {text: blobUrl, width:200, height:200});
-  const link = document.createElement('div');
-  link.style.marginTop = '8px';
-  link.innerHTML = `<small>สแกนเพื่อดาวน์โหลด (ถ้าสแกนไม่ขึ้น ให้เปิดลิงก์ด้วยมือถือ): <a href="${blobUrl}" target="_blank">เปิดรูป</a></small>`;
-  qrcodeContainer.appendChild(link);
-});
-
-/* convert dataURL to blob */
-function dataURItoBlob(dataURI) {
-  const byteString = atob(dataURI.split(',')[1]);
-  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-  for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-  return new Blob([ab], {type: mimeString});
-}
-
-/* Local save (LocalStorage) - store array of dataURLs */
-saveLocalBtn.addEventListener('click', ()=>{
-  try{
-    const data = finalCanvas.toDataURL('image/png');
-    let arr = JSON.parse(localStorage.getItem('tomoji_gallery')||'[]');
-    arr.unshift({ts:Date.now(), data});
-    // cap to 30 images
-    if(arr.length>30) arr = arr.slice(0,30);
-    localStorage.setItem('tomoji_gallery', JSON.stringify(arr));
-    renderLocalGallery();
-    alert('บันทึกลงเครื่องเรียบร้อย');
-  }catch(e){ alert('ไม่สามารถบันทึกได้: ' + e); }
-});
-clearLocalBtn.addEventListener('click', ()=>{
-  if(confirm('ต้องการล้าง gallery จริงหรือไม่?')){ localStorage.removeItem('tomoji_gallery'); renderLocalGallery(); }
-});
-function renderLocalGallery(){
-  localGallery.innerHTML = '';
-  const arr = JSON.parse(localStorage.getItem('tomoji_gallery')||'[]');
-  arr.forEach(item=>{
-    const d = document.createElement('div'); d.className='gitem';
-    const img = document.createElement('img'); img.src = item.data; img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-    d.appendChild(img);
-    d.addEventListener('click', ()=> {
-      // open in new tab
-      const w = window.open();
-      w.document.write('<img src="'+item.data+'" style="width:100%">');
-    });
-    localGallery.appendChild(d);
+document.querySelectorAll('.choice').forEach(c=>{
+  c.addEventListener('click',()=>{
+    totalShots=parseInt(c.dataset.n)||3;
+    start.style.display='none'; main.style.display='flex';
+    startCamera();
   });
-}
-renderLocalGallery();
-
-/* utility: seeds */
-(function restoreState(){
-  // nothing to restore except gallery
-})();
-
-/* initial small helper for keyboard: space to shutter */
-window.addEventListener('keydown', (e)=>{ if(e.code==='Space' && !stepChoose.classList.contains('hidden')) { /* noop on choose */ } });
-
-/* small: allow switching front/back by double-clicking the preview */
-document.querySelector('.preview').addEventListener('dblclick', async ()=>{
-  useFront = !useFront;
-  await startCamera();
 });
-
-/* On load, ensure video has small filter default */
-video.style.filter = FILTERS['none'].css;
-
-/* allow user to resume (back to choose) after final */
-finalCanvas.addEventListener('click', ()=>{ /* no-op */ });
-
-/* helper: if user re-opens capture from final (not implemented UI) */
-// End script
 </script>
 </body>
 </html>

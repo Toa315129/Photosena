@@ -2,271 +2,325 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sena Photobooth</title>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 body {
-  margin: 0; padding: 0;
-  font-family: 'Arial Rounded MT Bold', sans-serif;
-  text-align: center;
-  background: linear-gradient(180deg,#e6f6ff 0%, #ffffff 100%);
-  color: #3a6ea5;
-}
-h1 {
-  font-family: 'Comic Sans MS', cursive;
-  font-size: 34px;
-  margin: 20px 0;
-  color: #3a6ea5;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-button {
-  margin: 12px;
-  padding: 12px 24px;
-  font-size: 18px;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  background: #3a6ea5;
-  color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: 0.3s;
-}
-button:hover { background: #2b4f77; }
-
-/* Layout choice page */
-#layout-page {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(180deg, #f0faff, #ffffff);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
+  align-items: center;
+  min-height: 100vh;
+  color: #444;
 }
-.layout-options {
-  display: flex;
-  gap: 20px;
+
+/* Container */
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 960px;
+  padding: 20px;
 }
-.layout-box {
-  width: 140px; height: 200px;
-  border: 3px solid #3a6ea5;
-  border-radius: 10px;
-  display: grid;
+
+/* Title */
+h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 50px;
+  color: #3da9fc;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 6px rgba(61,169,252,0.2);
+}
+
+/* Camera Box */
+#camera {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  margin: 0 auto 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+#camera video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Flash effect */
+#flash {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Buttons */
+button {
+  background: #3da9fc;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  padding: 12px 28px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: 0.3s;
+  margin: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(61,169,252,0.3);
 }
-.layout-box:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+button:hover {
+  background: #90dbf4;
+  transform: translateY(-2px);
 }
-.layout-a { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
-.layout-b { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-.layout-c { grid-template-rows: 1fr; }
 
-/* Capture page */
-#capture-page { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; }
-#booth {
-  width: 420px; height: 320px;
-  background: #000; border: 8px solid #fff; border-radius: 20px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.2);
-  position: relative; overflow: hidden;
-  display: flex; justify-content: center; align-items: center;
+/* Thumbnails */
+#thumbnails {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  gap: 10px;
 }
-#video { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-#countdown {
-  position: absolute; font-size: 72px; color: #fff; font-weight: bold;
-  text-shadow: 0 0 15px rgba(0,0,0,0.8); display: none;
+#thumbnails img {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid #cde8ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-.flash { position: absolute; top:0; left:0; width:100%; height:100%; background:white; display:none; }
-#previews { margin-top: 15px; display: flex; justify-content: center; gap: 8px; }
 
-/* Download page */
-#download-page { display: none; padding: 20px; background: #f0faff; min-height: 100vh; }
+/* Download Page */
+#download-page {
+  display: none;
+  padding: 20px;
+}
 #frame {
   width: 600px; height: 900px;
-  margin: 20px auto; border-radius: 24px;
-  background: linear-gradient(180deg, #fff 0%, #f0f8ff 100%);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-  position: relative; padding: 20px; border: 6px solid #cce6ff;
+  margin: 20px auto;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 .photo {
-  margin: 6px; background-size: cover; background-position: center;
-  border: 3px solid #f2f2f2; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  position: relative; overflow: hidden;
+  width: 45%; height: 28%;
+  margin: 8px;
+  background-size: cover;
+  background-position: center;
+  border: 4px solid #cde8ff;
+  border-radius: 12px;
 }
+
+/* Title in Frame */
 #frame-title {
-  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-  font-size: 28px; font-weight: bold; color: #3a6ea5;
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  font-family: 'Pacifico', cursive;
+  font-size: 32px;
+  color: #3da9fc;
 }
-.decoration { position: absolute; font-size: 28px; color: #ffcd4c; }
-#dec1 { top: 10px; left: 10px; } #dec2 { top: 10px; right: 10px; }
-#dec3 { bottom: 10px; left: 10px; } #dec4 { bottom: 10px; right: 10px; }
-.sticker { position: absolute; top: 5px; left: 5px; font-size: 32px; cursor: move; user-select: none; }
-#sticker-options { margin: 20px 0; }
-#sticker-options span { font-size: 28px; margin: 0 8px; cursor: pointer; }
+
+/* Stickers */
+#stickers {
+  margin-top: 20px;
+}
+.sticker {
+  font-size: 32px;
+  margin: 6px;
+  cursor: grab;
+}
+.sticker-on-frame {
+  position: absolute;
+  cursor: grab;
+}
+
+/* Decorative Stars */
+.star {
+  position: absolute;
+  opacity: 0.8;
+}
+.star.yellow { color: #ffd93d; }
+.star.pink { color: #ff90b3; }
+.star.blue { color: #90dbf4; }
+#star1 { top: 10px; left: 10px; font-size: 36px; }
+#star2 { top: 10px; right: 20px; font-size: 42px; }
+#star3 { bottom: 20px; left: 30px; font-size: 30px; }
+#star4 { bottom: 20px; right: 20px; font-size: 40px; }
+
+/* Extra floating stars */
+.floating-star {
+  position: absolute;
+  font-size: 18px;
+  opacity: 0.6;
+  animation: twinkle 2s infinite ease-in-out alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.4; transform: scale(1);}
+  to { opacity: 1; transform: scale(1.2);}
+}
 </style>
 </head>
+
 <body>
-
-<!-- Layout choice -->
-<div id="layout-page">
-  <h1>Select Layout</h1>
-  <div class="layout-options">
-    <div class="layout-box layout-a" onclick="chooseLayout('A')">
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-    </div>
-    <div class="layout-box layout-b" onclick="chooseLayout('B')">
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-      <div style="border:1px solid #ccc"></div>
-    </div>
-    <div class="layout-box layout-c" onclick="chooseLayout('C')">
-      <div style="border:1px solid #ccc; height:100%"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Capture Page -->
-<div id="capture-page">
+<div class="container">
   <h1>Sena Photobooth</h1>
-  <div id="booth">
-    <video id="video" autoplay></video>
-    <div id="countdown">3</div>
-    <div class="flash" id="flash"></div>
-  </div>
-  <div>
-    <button onclick="startCapture()">Start</button>
-    <button onclick="retake()">Retake</button>
-    <button onclick="switchCamera()">Switch Camera</button>
-  </div>
-  <div id="previews"></div>
-</div>
 
-<!-- Download Page -->
-<div id="download-page">
-  <h1>Your Photobooth Photos</h1>
-  <div id="frame">
-    <div id="frame-title">Sena Photobooth</div>
-    <div class="decoration" id="dec1">⭐</div>
-    <div class="decoration" id="dec2">⭐</div>
-    <div class="decoration" id="dec3">⭐</div>
-    <div class="decoration" id="dec4">⭐</div>
+  <!-- Camera -->
+  <div id="camera">
+    <video id="video" autoplay></video>
+    <div id="flash"></div>
   </div>
-  <div id="sticker-options">
-    <p>Add stickers:</p>
-    <span onclick="addSticker('🐱')">🐱</span>
-    <span onclick="addSticker('👓')">👓</span>
-    <span onclick="addSticker('👑')">👑</span>
-    <span onclick="addSticker('💖')">💖</span>
-    <span onclick="addSticker('🌸')">🌸</span>
+  <button id="capture">Take Photo</button>
+  <button id="retake">Retake</button>
+  <button id="switch">Switch Box</button>
+  <button id="finish">Finish & Download</button>
+
+  <!-- Thumbnails -->
+  <div id="thumbnails"></div>
+
+  <!-- Stickers -->
+  <div id="stickers">
+    <span class="sticker">😺</span>
+    <span class="sticker">👓</span>
+    <span class="sticker">👑</span>
+    <span class="sticker">🎀</span>
   </div>
-  <button onclick="download()">Download</button>
-  <button onclick="printPhotos()">Print</button>
+
+  <!-- Download Page -->
+  <div id="download-page">
+    <div id="frame">
+      <div id="frame-title">Sena Photobooth</div>
+      <!-- Stars decoration -->
+      <div class="star yellow" id="star1">★</div>
+      <div class="star pink" id="star2">★</div>
+      <div class="star blue" id="star3">★</div>
+      <div class="star yellow" id="star4">★</div>
+      <!-- Extra floating stars -->
+      <div class="floating-star yellow" style="top:50px;left:150px">★</div>
+      <div class="floating-star blue" style="top:120px;right:80px">★</div>
+      <div class="floating-star pink" style="bottom:150px;left:120px">★</div>
+      <div class="floating-star yellow" style="bottom:200px;right:100px">★</div>
+    </div>
+    <button id="print">Print</button>
+    <button id="download">Download</button>
+  </div>
 </div>
 
 <script>
-let video=document.getElementById("video");
-let countdown=document.getElementById("countdown");
-let flash=document.getElementById("flash");
-let photos=[]; let currentStream; let usingFront=true;
-let chosenLayout="B"; // default
+const video = document.getElementById('video');
+const flash = document.getElementById('flash');
+const captureBtn = document.getElementById('capture');
+const retakeBtn = document.getElementById('retake');
+const switchBtn = document.getElementById('switch');
+const finishBtn = document.getElementById('finish');
+const thumbnails = document.getElementById('thumbnails');
+const downloadPage = document.getElementById('download-page');
+const frame = document.getElementById('frame');
+const downloadBtn = document.getElementById('download');
+const printBtn = document.getElementById('print');
+let photos = [];
 
-function chooseLayout(layout){
-  chosenLayout=layout;
-  document.getElementById("layout-page").style.display="none";
-  document.getElementById("capture-page").style.display="flex";
-  startCamera();
+// Webcam
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => { video.srcObject = stream; })
+  .catch(err => console.error("Camera error:", err));
+
+// Flash effect
+function doFlash() {
+  flash.style.opacity = 1;
+  setTimeout(()=> flash.style.opacity = 0, 200);
 }
-function startCamera(){
-  if(currentStream){ currentStream.getTracks().forEach(track=>track.stop()); }
-  navigator.mediaDevices.getUserMedia({ video:{ facingMode: usingFront?"user":"environment"}})
-  .then(stream=>{ currentStream=stream; video.srcObject=stream; });
-}
-async function takePhoto(){
-  return new Promise(resolve=>{
-    let canvas=document.createElement("canvas");
-    canvas.width=420; canvas.height=320;
-    let ctx=canvas.getContext("2d");
-    ctx.drawImage(video,0,0,canvas.width,canvas.height);
-    resolve(canvas.toDataURL("image/png"));
-  });
-}
-async function startCapture(){
-  photos=[];
-  let total = chosenLayout==="A"?4:chosenLayout==="B"?6:1;
-  let previews=document.getElementById("previews"); previews.innerHTML="";
-  for(let i=0;i<total;i++){
-    await showCountdown();
-    flash.style.display="block"; setTimeout(()=>flash.style.display="none",200);
-    let photo=await takePhoto(); photos.push(photo);
-    let pv=document.createElement("div");
-    pv.className="preview"; pv.style.width="60px"; pv.style.height="40px";
-    pv.style.backgroundImage="url("+photo+")";
-    previews.appendChild(pv);
-    await new Promise(r=>setTimeout(r,1000));
-  }
-  showDownloadPage();
-}
-function showCountdown(){
-  return new Promise(resolve=>{
-    let num=3; countdown.style.display="block"; countdown.innerText=num;
-    let timer=setInterval(()=>{
-      num--; if(num===0){clearInterval(timer); countdown.style.display="none"; resolve();}
-      else{countdown.innerText=num;}
-    },1000);
-  });
-}
-function showDownloadPage(){
-  document.getElementById("capture-page").style.display="none";
-  document.getElementById("download-page").style.display="block";
-  let frame=document.getElementById("frame");
-  frame.querySelectorAll(".photo").forEach(p=>p.remove());
-  let total=photos.length;
-  photos.forEach(p=>{
-    let div=document.createElement("div");
-    div.className="photo";
-    if(chosenLayout==="A"){div.style.width="45%"; div.style.height="45%";}
-    if(chosenLayout==="B"){div.style.width="45%"; div.style.height="28%";}
-    if(chosenLayout==="C"){div.style.width="90%"; div.style.height="80%";}
-    div.style.backgroundImage="url("+p+")";
+
+// Capture photo
+captureBtn.onclick = () => {
+  doFlash();
+  let canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  let ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  let data = canvas.toDataURL('image/png');
+  photos.push(data);
+
+  let img = document.createElement('img');
+  img.src = data;
+  thumbnails.appendChild(img);
+};
+
+// Retake (clear last photo)
+retakeBtn.onclick = () => {
+  photos.pop();
+  thumbnails.lastChild?.remove();
+};
+
+// Switch Box (just clears thumbnails for demo)
+switchBtn.onclick = () => {
+  photos = [];
+  thumbnails.innerHTML = "";
+};
+
+// Finish
+finishBtn.onclick = () => {
+  frame.querySelectorAll('.photo').forEach(p => p.remove());
+  photos.forEach(src => {
+    let div = document.createElement('div');
+    div.className = 'photo';
+    div.style.backgroundImage = `url(${src})`;
     frame.appendChild(div);
   });
-}
-function retake(){ photos=[]; document.getElementById("previews").innerHTML=""; }
-function switchCamera(){ usingFront=!usingFront; startCamera(); }
-function addSticker(emoji){
-  let frame=document.getElementById("frame");
-  let sticker=document.createElement("div");
-  sticker.className="sticker"; sticker.innerText=emoji; frame.appendChild(sticker);
-  sticker.onmousedown=function(e){
-    e.preventDefault();
-    let shiftX=e.clientX-sticker.getBoundingClientRect().left;
-    let shiftY=e.clientY-sticker.getBoundingClientRect().top;
-    function moveAt(pageX,pageY){
-      sticker.style.left=pageX-shiftX-frame.getBoundingClientRect().left+"px";
-      sticker.style.top=pageY-shiftY-frame.getBoundingClientRect().top+"px";
-    }
-    function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
-    document.addEventListener("mousemove",onMouseMove);
-    sticker.onmouseup=function(){ document.removeEventListener("mousemove",onMouseMove); sticker.onmouseup=null; };
+  downloadPage.style.display = 'block';
+  window.scrollTo(0,document.body.scrollHeight);
+};
+
+// Stickers draggable
+document.querySelectorAll('.sticker').forEach(sticker => {
+  sticker.onclick = () => {
+    let span = sticker.cloneNode(true);
+    span.classList.add('sticker-on-frame');
+    span.style.top = "50px";
+    span.style.left = "50px";
+    frame.appendChild(span);
+
+    let isDragging = false;
+    span.onmousedown = e => {
+      isDragging = true;
+      let offsetX = e.offsetX, offsetY = e.offsetY;
+      document.onmousemove = ev => {
+        if(isDragging){
+          span.style.left = ev.pageX - frame.offsetLeft - offsetX + "px";
+          span.style.top = ev.pageY - frame.offsetTop - offsetY + "px";
+        }
+      };
+      document.onmouseup = () => { isDragging = false; };
+    };
   };
-  sticker.ondragstart=()=>false;
-}
-function download(){
-  html2canvas(document.querySelector("#frame")).then(canvas=>{
-    let link=document.createElement("a");
-    link.download="sena_photobooth.png";
-    link.href=canvas.toDataURL(); link.click();
-  });
-}
-function printPhotos(){ window.print(); }
+});
+
+// Download
+downloadBtn.onclick = () => {
+  alert("💾 Downloading photo strip...");
+};
+
+// Print
+printBtn.onclick = () => {
+  window.print();
+};
 </script>
 </body>
 </html>

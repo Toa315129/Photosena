@@ -1,4 +1,4 @@
-<<!doctype html>
+<!doctype html>
 <html lang="th">
 <head>
 <meta charset="utf-8">
@@ -13,34 +13,35 @@
 body {
   margin: 0;
   padding: 0;
-  background: #faf9f7;
+  background: linear-gradient(135deg, #fdfdfb, #e6f0eb);
   font-family: 'Cinzel', serif;
   text-align: center;
 }
 
 /* กรอบหลัก */
 #frame {
-  width: 600px; /* ขนาดใกล้เคียง 4x6 นิ้ว */
+  width: 600px; /* 4x6 อัตราส่วน */
   height: 900px;
   margin: 30px auto;
   border: 14px solid #fff;
-  box-shadow: 0 0 25px rgba(0,0,0,0.25);
+  box-shadow: 0 0 30px rgba(0,0,0,0.3);
   background: #fff;
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 /* หัวโลโก้ */
 #frame h1 {
   font-family: 'Great Vibes', cursive;
-  font-size: 52px;
+  font-size: 60px;
   color: #145c3c;
-  margin: 12px 0 0;
+  margin: 15px 0 0;
 }
 #frame h2 {
   font-size: 18px;
   color: #145c3c;
-  margin: -8px 0 25px;
+  margin: -10px 0 25px;
   letter-spacing: 2px;
 }
 
@@ -56,49 +57,77 @@ body {
   background-size: cover;
   background-position: center;
   box-shadow: inset 0 0 8px rgba(0,0,0,0.15);
+  border-radius: 6px;
 }
 
-/* ปุ่ม */
+/* ปุ่มกล้อง */
 button {
   margin: 15px;
-  padding: 12px 25px;
+  padding: 15px 25px;
   font-size: 18px;
-  background: #145c3c;
+  background: radial-gradient(circle at top left, #2b7a4f, #145c3c);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 50px;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
 }
 button:hover {
-  background: #1b7a52;
+  transform: scale(1.05);
 }
 
 /* กรอบตกแต่ง */
 .star {
   position: absolute;
-  top: 80px;
-  left: -30px;
-  font-size: 120px;
+  top: 20px;
+  left: 20px;
+  font-size: 60px;
   color: #1b7a52;
-  transform: rotate(-20deg);
   opacity: 0.2;
 }
 .ribbon {
   position: absolute;
-  bottom: 120px;
-  right: -20px;
-  font-size: 140px;
+  bottom: 20px;
+  right: 20px;
+  font-size: 70px;
   color: #1b7a52;
-  transform: rotate(25deg);
-  opacity: 0.15;
+  transform: rotate(15deg);
+  opacity: 0.2;
 }
 .sparkle {
   position: absolute;
-  top: 40%;
-  left: 40%;
-  font-size: 50px;
+  top: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
   color: #fff;
-  text-shadow: 0 0 8px rgba(255,255,255,0.8);
+  text-shadow: 0 0 10px rgba(255,255,255,0.9);
+}
+
+/* นับถอยหลัง */
+#countdown {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0,0,0,0.7);
+  display: none;
+  font-family: 'Cinzel', serif;
+}
+
+/* แฟลชเอฟเฟกต์ */
+#flash {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 999;
 }
 </style>
 </head>
@@ -120,14 +149,45 @@ button:hover {
   <div class="star">★</div>
   <div class="ribbon">➿</div>
   <div class="sparkle">✦</div>
+  
+  <!-- นับถอยหลัง -->
+  <div id="countdown"></div>
 </div>
 
-<button onclick="startBooth()">🚀 เริ่มถ่ายอัตโนมัติ</button>
-<button onclick="download()">⬇️ ดาวน์โหลด</button>
+<div>
+  <button onclick="startBooth()">🚀 เริ่มถ่ายอัตโนมัติ</button>
+  <button onclick="download()">⬇️ ดาวน์โหลด</button>
+</div>
+
+<div id="flash"></div>
 
 <script>
-let count = 1;
 let taking = false;
+
+function showCountdown(num) {
+  return new Promise((resolve) => {
+    const countdown = document.getElementById("countdown");
+    countdown.style.display = "block";
+    let current = num;
+
+    const interval = setInterval(() => {
+      countdown.textContent = current;
+      current--;
+
+      if (current < 0) {
+        clearInterval(interval);
+        countdown.style.display = "none";
+        resolve();
+      }
+    }, 1000);
+  });
+}
+
+function flashEffect() {
+  const flash = document.getElementById("flash");
+  flash.style.opacity = 1;
+  setTimeout(() => flash.style.opacity = 0, 300);
+}
 
 function capturePhoto(slot) {
   return new Promise((resolve) => {
@@ -145,8 +205,9 @@ function capturePhoto(slot) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           document.getElementById(slot).style.backgroundImage = "url(" + canvas.toDataURL("image/png") + ")";
           stream.getTracks().forEach(track => track.stop());
+          flashEffect();
           resolve();
-        }, 3000); // เวลาถ่ายภาพ 3 วิ
+        }, 500);
       });
   });
 }
@@ -154,10 +215,10 @@ function capturePhoto(slot) {
 async function startBooth() {
   if (taking) return;
   taking = true;
-  count = 1;
 
   for (let i = 1; i <= 6; i++) {
-    await capturePhoto("p" + i);
+    await showCountdown(3);       // นับถอยหลัง 3..2..1
+    await capturePhoto("p" + i);  // ถ่าย
     await new Promise(r => setTimeout(r, 1000)); // เว้น 1 วิ
   }
 

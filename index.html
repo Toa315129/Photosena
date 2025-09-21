@@ -1,256 +1,186 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SENA PHOTOBOOTH</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SENA PHOTOBOOTH</title>
 
-  <!-- ฟอนต์น่ารัก -->
-  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sacramento&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Itim', cursive;
-      background: #fdfcf9;
-      color: #333;
-      text-align: center;
-    }
-
-    header {
-      background: #b3dbf4;
-      padding: 15px;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: white;
-      border-radius: 0 0 15px 15px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-
-    .page {
-      display: none;
-      padding: 20px;
-    }
-    .active {
-      display: block;
-    }
-
-    .options button {
-      background: white;
-      border: 2px solid #b3dbf4;
-      border-radius: 10px;
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .options button:hover {
-      background: #b3dbf4;
-      color: white;
-    }
-
-    video {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 15px;
-      margin: 15px 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    .capture-btn {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #b3dbf4;
-      border: none;
-      margin: 20px auto;
-      display: block;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .countdown {
-      font-size: 3rem;
-      margin: 20px;
-      color: #ff6b81;
-      font-family: 'Sacramento', cursive;
-    }
-
-    .result-grid {
-      display: grid;
-      gap: 15px;
-      justify-content: center;
-      margin: 20px auto;
-    }
-
-    .polaroid {
-      background: white;
-      padding: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      border-radius: 8px;
-      position: relative;
-    }
-
-    .polaroid img {
-      display: block;
-      width: 100%;
-      border-radius: 5px;
-    }
-
-    .controls button {
-      margin: 10px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: 2px solid #b3dbf4;
-      background: white;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .controls button:hover {
-      background: #b3dbf4;
-      color: white;
-    }
-
-    footer {
-      margin: 30px 0 10px;
-      font-size: 0.9rem;
-      color: #888;
-    }
-  </style>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdfaf4;      /* ครีม */
+  --blue:#a7d8f7;    /* ฟ้าพาสเทล */
+  --pink:#ffd6e8;    /* ชมพูพาสเทล */
+  --text:#333;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Quicksand",sans-serif;
+  background:var(--bg);
+  display:flex;justify-content:center;align-items:center;
+  min-height:100vh;padding:18px;
+}
+.container{
+  width:100%;max-width:960px;
+  background:var(--bg);padding:20px;border-radius:18px;
+  border:6px solid var(--blue);
+  box-shadow:0 6px 16px rgba(0,0,0,0.08);
+}
+.header{text-align:center;margin-bottom:20px;}
+.brand{font-size:42px;font-weight:700;color:var(--blue);margin-bottom:8px;}
+.page{display:none;}
+.page.active{display:block;}
+/* ปุ่ม */
+.btn{
+  padding:12px 18px;border-radius:12px;border:2px solid var(--blue);
+  background:#fff;color:var(--text);font-weight:600;cursor:pointer;
+  transition:0.2s;
+}
+.btn:hover{background:var(--blue);color:#fff;}
+.shutter{
+  width:80px;height:80px;border-radius:50%;background:#fff;border:5px solid var(--blue);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.shutter:hover{background:var(--pink);}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+/* การ์ดเลือกจำนวน */
+.choice-grid{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;}
+.choice{
+  width:140px;height:180px;background:#fff;border-radius:10px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  border:3px solid var(--blue);cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:0.2s;
+}
+.choice:hover{background:var(--pink);transform:translateY(-4px);}
+.preview{
+  width:100%;border-radius:14px;overflow:hidden;background:#fff;border:4px solid var(--blue);
+  aspect-ratio:3/4;position:relative;
+}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.countdown{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--pink);font-weight:700;}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;transition:0.2s;}
+.flash.show{opacity:0.85;}
+.gallery{margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.thumb{
+  width:120px;aspect-ratio:3/4;background:#fff;border-radius:8px;overflow:hidden;
+  border:3px solid var(--blue);box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  display:flex;align-items:center;justify-content:center;
+}
+.thumb img{width:100%;height:100%;object-fit:cover;}
+.footer{text-align:center;margin-top:20px;font-size:14px;color:#555;}
+</style>
 </head>
 <body>
+<div class="container">
 
-  <header>SENA PHOTOBOOTH</header>
+  <div class="header"><div class="brand">SENA PHOTOBOOTH</div></div>
 
-  <!-- หน้าเลือกจำนวนรูป -->
-  <div id="page1" class="page active">
-    <h2>เลือกจำนวนรูป</h2>
-    <div class="options">
-      <button onclick="startCamera(2)">2 รูป</button>
-      <button onclick="startCamera(4)">4 รูป</button>
-      <button onclick="startCamera(6)">6 รูป</button>
+  <!-- หน้าเลือกจำนวน -->
+  <div class="page active" id="page-select">
+    <div style="text-align:center;margin-bottom:12px;">เลือกจำนวนช่องรูป</div>
+    <div class="choice-grid">
+      <div class="choice" data-n="2">2 ช่อง</div>
+      <div class="choice" data-n="3">3 ช่อง</div>
+      <div class="choice" data-n="4">4 ช่อง</div>
+      <div class="choice" data-n="6">6 ช่อง</div>
     </div>
   </div>
 
-  <!-- หน้า Capture -->
-  <div id="page2" class="page">
-    <video id="video" autoplay playsinline></video>
-    <div class="countdown" id="countdown"></div>
-    <button class="capture-btn" onclick="capturePhotos()"></button>
-    <input type="file" id="uploadInput" accept="image/*" multiple onchange="handleUpload(event)">
-  </div>
-
-  <!-- หน้า Download -->
-  <div id="page3" class="page">
-    <h2>ภาพของคุณ</h2>
-    <div id="result" class="result-grid"></div>
+  <!-- หน้ากล้อง -->
+  <div class="page" id="page-camera">
+    <div class="preview"><video id="video" autoplay playsinline></video><div class="countdown" id="countdown"></div><div class="flash" id="flash"></div></div>
     <div class="controls">
-      <button onclick="downloadImages()">Download</button>
-      <button onclick="window.print()">Print</button>
-      <button onclick="goHome()">กลับหน้าแรก</button>
+      <div class="shutter" id="shutter"></div>
+      <button class="btn" id="retake" disabled>ถ่ายใหม่</button>
+      <button class="btn" id="upload">อัปโหลด</button>
+      <button class="btn" id="download" disabled>ดาวน์โหลด</button>
+      <button class="btn" id="makeqr" disabled>QR</button>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
     </div>
+    <div class="gallery" id="thumbs"></div>
   </div>
 
-  <footer>saphasena68</footer>
+  <div class="footer">@saphasena68</div>
+</div>
 
-  <script>
-    let video = document.getElementById('video');
-    let countdownEl = document.getElementById('countdown');
-    let result = document.getElementById('result');
-    let photoCount = 0;
-    let totalPhotos = 0;
-    let capturedImages = [];
+<audio id="snap" src="https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3" preload="auto"></audio>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(()=>{
 
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+const pageSelect=document.getElementById('page-select');
+const pageCamera=document.getElementById('page-camera');
+const thumbsEl=document.getElementById('thumbs');
+const shutter=document.getElementById('shutter');
+const retake=document.getElementById('retake');
+const upload=document.getElementById('upload');
+const download=document.getElementById('download');
+const makeqr=document.getElementById('makeqr');
+const fileInput=document.getElementById('fileInput');
+const video=document.getElementById('video');
+const countdown=document.getElementById('countdown');
+const flash=document.getElementById('flash');
+const snap=document.getElementById('snap');
+let captures=[],slots=3,finalImage=null,stream=null;
 
-    function startCamera(count) {
-      totalPhotos = count;
-      photoCount = 0;
-      capturedImages = [];
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-          video.srcObject = stream;
-          showPage('page2');
-        });
-    }
+document.querySelectorAll('.choice').forEach(c=>{
+  c.addEventListener('click',()=>{
+    slots=parseInt(c.dataset.n);captures=new Array(slots).fill(null);
+    thumbsEl.innerHTML='';for(let i=0;i<slots;i++){thumbsEl.innerHTML+=`<div class="thumb" id="t${i}"><span style="opacity:.3">${i+1}</span></div>`;}
+    pageSelect.classList.remove('active');pageCamera.classList.add('active');startCamera();
+  });
+});
 
-    async function capturePhotos() {
-      capturedImages = [];
-      for (let i = 0; i < totalPhotos; i++) {
-        await countdown(3);
-        capture();
-        await new Promise(r => setTimeout(r, 1000));
-      }
-      showResult();
-    }
+async function startCamera(){
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+    video.srcObject=stream;await video.play();
+  }catch(e){alert("ไม่สามารถเปิดกล้องได้ "+e);}
+}
+function captureFrame(){
+  const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;
+  const ctx=c.getContext('2d');ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(video,0,0);
+  return c.toDataURL('image/png');
+}
+function showCount(n){countdown.textContent=n;}function hideCount(){countdown.textContent='';}
+function doFlash(){snap.play().catch(()=>{});flash.classList.add('show');setTimeout(()=>flash.classList.remove('show'),180);}
 
-    function countdown(sec) {
-      return new Promise(resolve => {
-        let interval = setInterval(() => {
-          countdownEl.textContent = sec;
-          sec--;
-          if (sec < 0) {
-            clearInterval(interval);
-            countdownEl.textContent = '';
-            resolve();
-          }
-        }, 1000);
-      });
-    }
-
-    function capture() {
-      let canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      let imgURL = canvas.toDataURL('image/png');
-      capturedImages.push(imgURL);
-    }
-
-    function showResult() {
-      showPage('page3');
-      result.innerHTML = '';
-      result.style.gridTemplateColumns = `repeat(${Math.ceil(totalPhotos/2)}, 200px)`;
-      capturedImages.forEach(img => {
-        let div = document.createElement('div');
-        div.className = 'polaroid';
-        div.innerHTML = `<img src="${img}">`;
-        result.appendChild(div);
-      });
-    }
-
-    function handleUpload(event) {
-      capturedImages = [];
-      let files = event.target.files;
-      Array.from(files).forEach(file => {
-        let reader = new FileReader();
-        reader.onload = e => {
-          capturedImages.push(e.target.result);
-          if (capturedImages.length === files.length) {
-            showResult();
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function downloadImages() {
-      capturedImages.forEach((img, i) => {
-        let a = document.createElement('a');
-        a.href = img;
-        a.download = `photo_${i+1}.png`;
-        a.click();
-      });
-    }
-
-    function goHome() {
-      showPage('page1');
-    }
-  </script>
-
+async function take(){
+  captures.fill(null);thumbsEl.querySelectorAll('.thumb').forEach((t,i)=>t.innerHTML=`<span style="opacity:.3">${i+1}</span>`);
+  for(let i=0;i<slots;i++){
+    for(let s=3;s>=1;s--){showCount(s);await new Promise(r=>setTimeout(r,1000));}
+    hideCount();doFlash();const data=captureFrame();captures[i]=data;document.getElementById("t"+i).innerHTML=makePolaroid(data);
+    if(i<slots-1) await new Promise(r=>setTimeout(r,1000));
+  }
+  retake.disabled=false;download.disabled=false;makeqr.disabled=false;
+}
+shutter.addEventListener('click',take);
+retake.addEventListener('click',()=>{captures.fill(null);thumbsEl.querySelectorAll('.thumb').forEach((t,i)=>t.innerHTML=`<span style="opacity:.3">${i+1}</span>`);download.disabled=true;makeqr.disabled=true;});
+upload.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',async e=>{
+  const files=[...e.target.files].slice(0,slots);if(files.length<slots){alert("กรุณาเลือก "+slots+" รูป");return;}
+  captures.fill(null);
+  for(let i=0;i<slots;i++){const file=files[i];const reader=new FileReader();await new Promise((res,rej)=>{reader.onload=()=>{captures[i]=reader.result;document.getElementById("t"+i).innerHTML=makePolaroid(reader.result);res();};reader.onerror=rej;reader.readAsDataURL(file);});}
+  retake.disabled=false;download.disabled=false;makeqr.disabled=false;
+});
+function makePolaroid(src){
+  return `<div style="background:#fff;padding:6px 6px 18px;border-radius:6px;box-shadow:0 4px 8px rgba(0,0,0,0.15);width:100%;height:100%;display:flex;align-items:center;justify-content:center;"><img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;"></div>`;
+}
+function loadImage(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});}
+async function buildImage(){
+  const W=1600,H=2400;const c=document.createElement("canvas");c.width=W;c.height=H;const ctx=c.getContext("2d");
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+  ctx.fillStyle= "#a7d8f7";ctx.fillRect(0,40,W,100);ctx.fillStyle="#fff";ctx.font="64px Quicksand";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("SENA PHOTOBOOTH",W/2,90);
+  const margin=80,gap=30;const boxW=W-margin*2;const boxH=(H-300-(slots-1)*gap)/slots;
+  for(let i=0;i<slots;i++){const y=180+i*(boxH+gap);const img=await loadImage(captures[i]);const scale=Math.min(boxW/img.width,boxH/img.height);const iw=img.width*scale,ih=img.height*scale;const dx=margin+(boxW-iw)/2;const dy=y+(boxH-ih)/2;
+    ctx.fillStyle="#fff";ctx.fillRect(dx-12,dy-12,iw+24,ih+36);ctx.drawImage(img,dx,dy,iw,ih);}
+  ctx.fillStyle="#333";ctx.font="28px Quicksand";ctx.fillText("@saphasena68",W/2,H-40);
+  return c.toDataURL("image/png");
+}
+download.addEventListener('click',async()=>{finalImage=await buildImage();const a=document.createElement("a");a.href=finalImage;a.download="sena_booth.png";a.click();});
+makeqr.addEventListener('click',async()=>{finalImage=await buildImage();const qrDiv=document.createElement("div");new QRCode(qrDiv,{text:finalImage,width:200,height:200});document.body.appendChild(qrDiv);});
+})();
+</script>
 </body>
 </html>

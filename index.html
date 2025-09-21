@@ -1,231 +1,306 @@
 <!doctype html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sena Photobooth</title>
-
-<!-- ฟอนต์ -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
-
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
 body {
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #fdfdfb, #e6f0eb);
-  font-family: 'Cinzel', serif;
+  margin: 0; padding: 0;
+  font-family: 'Arial', sans-serif;
   text-align: center;
 }
 
-/* กรอบหลัก */
-#frame {
-  width: 600px; /* 4x6 อัตราส่วน */
-  height: 900px;
-  margin: 30px auto;
-  border: 14px solid #fff;
-  box-shadow: 0 0 30px rgba(0,0,0,0.3);
-  background: #fff;
+/* ----- Capture Page ----- */
+#capture-page {
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  height: 100vh;
+  background: #ffeef2; /* pastel pink */
+}
+
+h1 {
+  font-family: 'Courier New', monospace;
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+#booth {
+  width: 420px;
+  height: 320px;
+  background: #000;
+  border: 8px solid #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* หัวโลโก้ */
-#frame h1 {
-  font-family: 'Great Vibes', cursive;
-  font-size: 60px;
-  color: #145c3c;
-  margin: 15px 0 0;
-}
-#frame h2 {
-  font-size: 18px;
-  color: #145c3c;
-  margin: -10px 0 25px;
-  letter-spacing: 2px;
+#video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-/* ช่องภาพ */
-.photo-box {
-  width: 45%;
-  height: 26%;
-  border: 3px solid #145c3c;
-  margin: 10px;
-  background: #eee;
-  display: inline-block;
-  vertical-align: top;
-  background-size: cover;
-  background-position: center;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.15);
-  border-radius: 6px;
-}
-
-/* ปุ่มกล้อง */
-button {
-  margin: 15px;
-  padding: 15px 25px;
-  font-size: 18px;
-  background: radial-gradient(circle at top left, #2b7a4f, #145c3c);
-  color: #fff;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
-}
-button:hover {
-  transform: scale(1.05);
-}
-
-/* กรอบตกแต่ง */
-.star {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 60px;
-  color: #1b7a52;
-  opacity: 0.2;
-}
-.ribbon {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 70px;
-  color: #1b7a52;
-  transform: rotate(15deg);
-  opacity: 0.2;
-}
-.sparkle {
-  position: absolute;
-  top: 95px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 30px;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(255,255,255,0.9);
-}
-
-/* นับถอยหลัง */
 #countdown {
   position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 100px;
+  font-size: 64px;
   color: #fff;
-  text-shadow: 0 0 20px rgba(0,0,0,0.7);
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
   display: none;
-  font-family: 'Cinzel', serif;
 }
 
-/* แฟลชเอฟเฟกต์ */
-#flash {
-  position: fixed;
+button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #444;
+  color: #fff;
+  transition: 0.3s;
+}
+button:hover { background: #666; }
+
+.flash {
+  position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: white;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s;
-  z-index: 999;
+  display: none;
+}
+
+/* ----- Download Page ----- */
+#download-page {
+  display: none;
+  padding: 20px;
+  background: #eafff5; /* pastel mint */
+  min-height: 100vh;
+}
+
+#frame {
+  width: 600px; height: 900px;
+  margin: 20px auto;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fff 0%, #fff8f9 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 20px;
+  border: 6px solid #ffd6e0; /* pastel pink border */
+}
+
+/* Photos */
+.photo {
+  width: 45%; height: 28%;
+  margin: 8px;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid #f2f2f2;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Stickers */
+.sticker {
+  position: absolute;
+  top: 5px; left: 5px;
+  font-size: 32px;
+  cursor: move;
+  user-select: none;
+}
+
+/* Logo */
+#logo {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  font-weight: bold;
+  color: #555;
+  opacity: 0.9;
+  padding-top: 8px;
+  border-top: 1px dashed #ccc;
+}
+
+/* Cute decorations */
+.decoration {
+  position: absolute;
+  font-size: 28px;
+  opacity: 0.7;
+}
+.decoration.star { color: #ffc9d9; }
+.decoration.heart { color: #a2e8dd; }
+.decoration.blue { color: #c7e5ff; }
+
+/* Positions */
+#dec1 { top: 12px; left: 12px; }
+#dec2 { top: 12px; right: 12px; }
+#dec3 { bottom: 60px; left: 12px; }
+#dec4 { bottom: 60px; right: 12px; }
+
+/* Sticker options */
+#sticker-options {
+  margin: 20px 0;
+}
+#sticker-options span {
+  font-size: 28px;
+  margin: 0 8px;
+  cursor: pointer;
 }
 </style>
 </head>
 <body>
 
-<div id="frame">
-  <h1>Sena</h1>
-  <h2>PHOTO BOOTH</h2>
-  
-  <!-- 6 ช่องรูป -->
-  <div class="photo-box" id="p1"></div>
-  <div class="photo-box" id="p2"></div><br>
-  <div class="photo-box" id="p3"></div>
-  <div class="photo-box" id="p4"></div><br>
-  <div class="photo-box" id="p5"></div>
-  <div class="photo-box" id="p6"></div>
-  
-  <!-- กรอบตกแต่ง -->
-  <div class="star">★</div>
-  <div class="ribbon">➿</div>
-  <div class="sparkle">✦</div>
-  
-  <!-- นับถอยหลัง -->
-  <div id="countdown"></div>
+<!-- Capture Page -->
+<div id="capture-page">
+  <h1>Sena Photobooth</h1>
+  <div id="booth">
+    <video id="video" autoplay></video>
+    <div id="countdown">3</div>
+    <div class="flash" id="flash"></div>
+  </div>
+  <button onclick="startCapture()">Start</button>
 </div>
 
-<div>
-  <button onclick="startBooth()">🚀 เริ่มถ่ายอัตโนมัติ</button>
-  <button onclick="download()">⬇️ ดาวน์โหลด</button>
-</div>
+<!-- Download Page -->
+<div id="download-page">
+  <h1>Your Photobooth Photos</h1>
+  <div id="frame">
+    <div class="decoration star" id="dec1">★</div>
+    <div class="decoration blue" id="dec2">✦</div>
+    <div class="decoration heart" id="dec3">❤</div>
+    <div class="decoration star" id="dec4">✦</div>
+    <div id="logo">Sena Photobooth</div>
+  </div>
 
-<div id="flash"></div>
+  <!-- Sticker options -->
+  <div id="sticker-options">
+    <p>Add stickers to your photos:</p>
+    <span onclick="addSticker('🐱')">🐱</span>
+    <span onclick="addSticker('👓')">👓</span>
+    <span onclick="addSticker('👑')">👑</span>
+    <span onclick="addSticker('💖')">💖</span>
+    <span onclick="addSticker('🌸')">🌸</span>
+  </div>
+
+  <button onclick="download()">Download</button>
+</div>
 
 <script>
-let taking = false;
+let video = document.getElementById("video");
+let countdown = document.getElementById("countdown");
+let flash = document.getElementById("flash");
+let photos = [];
 
-function showCountdown(num) {
-  return new Promise((resolve) => {
-    const countdown = document.getElementById("countdown");
+// Start webcam
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => video.srcObject = stream);
+
+// Take photo
+async function takePhoto() {
+  return new Promise(resolve => {
+    let canvas = document.createElement("canvas");
+    canvas.width = 420;
+    canvas.height = 320;
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    resolve(canvas.toDataURL("image/png"));
+  });
+}
+
+// Capture sequence
+async function startCapture() {
+  photos = [];
+  for (let i = 0; i < 6; i++) {
+    await showCountdown();
+    flash.style.display = "block";
+    setTimeout(() => flash.style.display = "none", 200);
+    let photo = await takePhoto();
+    photos.push(photo);
+    await new Promise(r => setTimeout(r, 1000));
+  }
+  showDownloadPage();
+}
+
+// Countdown
+function showCountdown() {
+  return new Promise(resolve => {
+    let num = 3;
     countdown.style.display = "block";
-    let current = num;
-
-    const interval = setInterval(() => {
-      countdown.textContent = current;
-      current--;
-
-      if (current < 0) {
-        clearInterval(interval);
+    countdown.innerText = num;
+    let timer = setInterval(() => {
+      num--;
+      if (num === 0) {
+        clearInterval(timer);
         countdown.style.display = "none";
         resolve();
+      } else {
+        countdown.innerText = num;
       }
     }, 1000);
   });
 }
 
-function flashEffect() {
-  const flash = document.getElementById("flash");
-  flash.style.opacity = 1;
-  setTimeout(() => flash.style.opacity = 0, 300);
-}
-
-function capturePhoto(slot) {
-  return new Promise((resolve) => {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        let video = document.createElement("video");
-        video.srcObject = stream;
-        video.play();
-
-        setTimeout(() => {
-          let canvas = document.createElement("canvas");
-          canvas.width = 400;
-          canvas.height = 300;
-          let ctx = canvas.getContext("2d");
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          document.getElementById(slot).style.backgroundImage = "url(" + canvas.toDataURL("image/png") + ")";
-          stream.getTracks().forEach(track => track.stop());
-          flashEffect();
-          resolve();
-        }, 500);
-      });
+// Switch to Download Page
+function showDownloadPage() {
+  document.getElementById("capture-page").style.display = "none";
+  document.getElementById("download-page").style.display = "block";
+  let frame = document.getElementById("frame");
+  photos.forEach(p => {
+    let div = document.createElement("div");
+    div.className = "photo";
+    div.style.backgroundImage = "url(" + p + ")";
+    frame.insertBefore(div, document.getElementById("logo"));
   });
 }
 
-async function startBooth() {
-  if (taking) return;
-  taking = true;
+// Add stickers
+function addSticker(emoji) {
+  let photosEls = document.querySelectorAll(".photo");
+  if (photosEls.length > 0) {
+    let lastPhoto = photosEls[photosEls.length - 1];
+    let sticker = document.createElement("div");
+    sticker.className = "sticker";
+    sticker.innerText = emoji;
+    lastPhoto.appendChild(sticker);
 
-  for (let i = 1; i <= 6; i++) {
-    await showCountdown(3);       // นับถอยหลัง 3..2..1
-    await capturePhoto("p" + i);  // ถ่าย
-    await new Promise(r => setTimeout(r, 1000)); // เว้น 1 วิ
+    // Make sticker draggable
+    sticker.onmousedown = function(e) {
+      e.preventDefault();
+      let shiftX = e.clientX - sticker.getBoundingClientRect().left;
+      let shiftY = e.clientY - sticker.getBoundingClientRect().top;
+      function moveAt(pageX, pageY) {
+        sticker.style.left = pageX - shiftX - lastPhoto.getBoundingClientRect().left + "px";
+        sticker.style.top = pageY - shiftY - lastPhoto.getBoundingClientRect().top + "px";
+      }
+      function onMouseMove(e) {
+        moveAt(e.pageX, e.pageY);
+      }
+      document.addEventListener("mousemove", onMouseMove);
+      sticker.onmouseup = function() {
+        document.removeEventListener("mousemove", onMouseMove);
+        sticker.onmouseup = null;
+      };
+    };
+    sticker.ondragstart = () => false;
   }
-
-  taking = false;
 }
 
-function download(){
+// Download
+function download() {
   html2canvas(document.querySelector("#frame")).then(canvas => {
     let link = document.createElement("a");
     link.download = "sena_photobooth.png";
@@ -234,9 +309,5 @@ function download(){
   });
 }
 </script>
-
-<!-- โหลด html2canvas -->
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
 </body>
 </html>

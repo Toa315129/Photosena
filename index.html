@@ -1,581 +1,205 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SENA PHOTOBOOTH</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#fdfaf4;
-  --blue:#8fcffb;
-  --accent:#ffb3d1;
-  --shadow: rgba(16,24,40,0.08);
-  --text:#203040;
+  --blue:#a7d8f7;
+  --pink:#ffd6e8;
+  --text:#333;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);font-family:"Quicksand",system-ui,-apple-system,"Segoe UI",Roboto,"Patrick Hand",sans-serif;color:var(--text)}
-.container{max-width:1100px;margin:28px auto;padding:20px;border-radius:18px;background:#fff;border:6px solid var(--blue);box-shadow:0 18px 40px var(--shadow);}
-.header{display:flex;flex-direction:column;align-items:center;gap:6px;padding-bottom:10px}
-.brand{font-size:40px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase}
-.subtitle{font-size:14px;color:rgba(0,0,0,0.5)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);font-family:"Quicksand",sans-serif;}
 
-/* pages */
-.page{display:none}
-.page.active{display:block}
+/* container หลัก */
+.page{display:none;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.page.active{display:flex;}
 
-/* layout select (page1) */
-.choose-grid{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:22px}
-.card{
-  width:150px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfbff);
-  padding:12px;border:3px solid var(--blue);cursor:pointer;box-shadow:0 8px 20px var(--shadow);
-  transition:transform .16s, box-shadow .16s;
+/* header */
+.header{font-size:42px;font-weight:700;color:var(--blue);margin-bottom:20px;text-align:center;}
+
+/* ปุ่ม */
+.btn{
+  padding:12px 18px;
+  border-radius:12px;
+  border:2px solid var(--blue);
+  background:#fff;
+  color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+  margin:6px;
+  transition:0.2s;
 }
-.card:hover{transform:translateY(-6px)}
-.card .preview{
-  height:120px;border-radius:8px;background:#f7fbff;border:2px dashed rgba(0,0,0,0.03);
-  display:flex;flex-wrap:wrap;gap:6px;padding:6px;align-content:flex-start;
+.btn:hover{background:var(--blue);color:#fff}
+.shutter{width:80px;height:80px;border-radius:50%;border:6px solid var(--blue);background:#fff;cursor:pointer;margin:12px;}
+.shutter:hover{background:var(--pink)}
+
+/* video */
+.preview{width:300px;height:400px;background:#fff;border-radius:12px;overflow:hidden;position:relative;border:4px solid var(--blue);}
+#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+
+/* gallery */
+.gallery{display:grid;gap:14px;margin-top:16px;}
+.gallery.two{grid-template-columns:1fr;}
+.gallery.three{grid-template-columns:1fr;}
+.gallery.four{grid-template-columns:1fr 1fr;}
+.gallery.six{grid-template-columns:1fr 1fr 1fr;}
+.polaroid{
+  position:relative;
+  background:#fff;
+  padding:8px 8px 24px 8px;
+  border-radius:10px;
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
 }
-.card .preview .p{background:#eaf6ff;border-radius:6px;flex:0 0 45%;height:40%;box-shadow:inset 0 -6px 0 rgba(255,255,255,0.35)}
-.card .label{text-align:center;margin-top:10px;font-weight:700;color:var(--text)}
-
-/* capture page layout */
-.capture-area{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
-.left-col{min-width:320px;flex:1;display:flex;flex-direction:column;align-items:center;gap:12px}
-.preview-box{width:420px;height:560px;border-radius:14px;overflow:hidden;border:6px solid #fff;box-shadow:0 12px 30px rgba(0,0,0,0.09);position:relative;background:linear-gradient(180deg,#fff,#f7fbff);}
-#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
-.countdown{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:64px;color:var(--accent);font-weight:700;text-shadow:0 6px 18px rgba(0,0,0,0.12)}
-.progress-badge{position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.9);padding:6px 10px;border-radius:14px;font-weight:700;color:var(--text);box-shadow:0 4px 10px rgba(0,0,0,0.06)}
-.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .15s}
-.flash.show{opacity:.85}
-
-/* controls */
-.controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px;flex-wrap:wrap}
-.shutter{
-  width:96px;height:96px;border-radius:50%;background:#fff;border:8px solid var(--blue);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 26px rgba(0,0,0,0.12);
+.polaroid img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
+.deco{
+  position:absolute;
+  font-size:18px;
+  pointer-events:none;
+  opacity:0.8;
 }
-.small-btn{padding:10px 12px;border-radius:12px;border:2px solid var(--blue);background:#fff;cursor:pointer;font-weight:700}
-
-/* right column (preview thumbnails + actions) */
-.right-col{width:340px;display:flex;flex-direction:column;gap:12px;align-items:center}
-.thumbs{display:grid;gap:12px;width:100%}
-.thumb{background:#fff;border-radius:10px;border:4px solid #fff;box-shadow:0 8px 22px rgba(0,0,0,0.08);overflow:hidden;position:relative;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.thumb .tag{position:absolute;left:8px;top:8px;background:rgba(255,255,255,0.9);padding:4px 8px;border-radius:8px;font-weight:700;font-size:13px}
-
-/* result layout (2 page) */
-.result-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px}
-.result-item{background:#fff;border-radius:10px;padding:8px;box-shadow:0 10px 28px rgba(0,0,0,0.12);position:relative;overflow:hidden}
-.result-item img{width:100%;height:100%;object-fit:cover;border-radius:6px}
-
-/* polaroid decoration */
-.polaroid-frame{background:#fff;padding:10px 10px 22px 10px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.12);display:flex;flex-direction:column;align-items:center}
-.polaroid-frame img{width:100%;height:100%;object-fit:cover;border-radius:6px}
-
-/* footer area */
-.footer-row{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:18px}
-.note{font-size:14px;color:rgba(0,0,0,0.55)}
-
-/* responsive */
-@media(max-width:980px){
-  .capture-area{flex-direction:column;align-items:center}
-  .preview-box{width:320px;height:480px}
-  .right-col{width:100%}
-}
-
-/* 90s stickers */
-.sticker{
-  position:absolute;font-size:18px;opacity:0.95;pointer-events:none;
-  text-shadow:0 2px 6px rgba(0,0,0,0.12);
-}
+.note{text-align:center;font-size:14px;color:#555;margin-top:6px}
 </style>
 </head>
 <body>
-  <div class="container" role="application" aria-label="SENA Photobooth">
-    <div class="header">
-      <div class="brand">SENA PHOTOBOOTH</div>
-      <div class="subtitle">Minimal • Cute • 90s Vibes</div>
-    </div>
 
-    <!-- Page 1: Choose -->
-    <div id="page-choose" class="page active" aria-hidden="false">
-      <h3 style="text-align:center;margin-top:8px">เลือกจำนวนช่องรูป</h3>
-      <div class="choose-grid" role="list">
-        <div class="card" data-layout="2" role="listitem" tabindex="0">
-          <div class="preview" aria-hidden="true">
-            <div class="p" style="width:100%;height:48%;"></div>
-            <div class="p" style="width:100%;height:48%;"></div>
-          </div>
-          <div class="label">2 รูป — บน / ล่าง</div>
-        </div>
-
-        <div class="card" data-layout="3" role="listitem" tabindex="0">
-          <div class="preview" style="flex-direction:column;">
-            <div class="p" style="width:100%;height:30%"></div>
-            <div class="p" style="width:100%;height:30%"></div>
-            <div class="p" style="width:100%;height:30%"></div>
-          </div>
-          <div class="label">3 รูป — ติดกัน</div>
-        </div>
-
-        <div class="card" data-layout="4" role="listitem" tabindex="0">
-          <div class="preview">
-            <div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div>
-          </div>
-          <div class="label">4 รูป — 2×2</div>
-        </div>
-
-        <div class="card" data-layout="6" role="listitem" tabindex="0">
-          <div class="preview">
-            <div class="p"></div><div class="p"></div><div class="p"></div>
-            <div class="p"></div><div class="p"></div><div class="p"></div>
-          </div>
-          <div class="label">6 รูป — 3×2</div>
-        </div>
-      </div>
-
-      <p style="text-align:center;margin-top:20px;color:rgba(0,0,0,0.6)">เลือกจำนวนที่ต้องการแล้วกดเริ่ม — หน้าเดียวใช้งานง่าย</p>
-    </div>
-
-    <!-- Page 2: Booth (capture + result combined) -->
-    <div id="page-booth" class="page" aria-hidden="true">
-      <div class="capture-area">
-        <div class="left-col">
-          <div class="preview-box" id="previewBox">
-            <video id="video" autoplay playsinline></video>
-            <div class="progress-badge" id="progressBadge" aria-live="polite">📸 0 / 3</div>
-            <div class="countdown" id="countdown" aria-hidden="true"></div>
-            <div class="flash" id="flash"></div>
-            <!-- decorative stickers (90s) -->
-            <div id="stickersContainer"></div>
-          </div>
-
-          <div class="controls" role="toolbar">
-            <div class="shutter" id="shutter" title="ถ่าย"></div>
-            <button class="small-btn" id="btnUpload">Upload</button>
-            <button class="small-btn" id="btnReset">Reset</button>
-            <button class="small-btn" id="btnDownload" disabled>Download</button>
-            <button class="small-btn" id="btnPrint" disabled>Print</button>
-          </div>
-
-        </div>
-
-        <div class="right-col" aria-live="polite">
-          <div style="width:100%;text-align:center;font-weight:700">ตัวอย่าง (กรอบโพลารอยด์)</div>
-          <div id="thumbs" class="thumbs" aria-label="ตัวอย่างรูป" style="display:grid;grid-template-columns:repeat(1,1fr);gap:12px;width:100%;margin-top:8px"></div>
-
-          <div style="width:100%;margin-top:12px;text-align:center">
-            <div class="note">ตกแต่งกรอบอัตโนมัติ — รูปจะถูก crop ให้พอดีไม่บีบ</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:18px;text-align:center;color:rgba(0,0,0,0.6)">เมื่อถ่าย/อัปโหลดครบ จะสามารถดาวน์โหลดไฟล์รวม 4×6 ได้</div>
-
-    </div>
-
+<!-- หน้าเลือกจำนวน -->
+<div class="page active" id="page-select">
+  <div class="header">SENA PHOTOBOOTH</div>
+  <p style="margin-bottom:16px;color:var(--text)">เลือกจำนวนช่อง</p>
+  <div>
+    <button class="btn" onclick="startBooth(2)">2 ช่อง</button>
+    <button class="btn" onclick="startBooth(3)">3 ช่อง</button>
+    <button class="btn" onclick="startBooth(4)">4 ช่อง</button>
+    <button class="btn" onclick="startBooth(6)">6 ช่อง</button>
   </div>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- หน้า photobooth -->
+<div class="page" id="page-booth">
+  <div class="header">SENA PHOTOBOOTH</div>
+  <div class="preview"><video id="video" autoplay playsinline></video></div>
+  <div class="note" id="progress">ยังไม่ได้ถ่าย</div>
+  <div style="margin-top:12px">
+    <div class="shutter" id="shutter"></div>
+  </div>
+  <div>
+    <button class="btn" id="switch">สลับกล้อง</button>
+    <button class="btn" id="upload">อัปโหลด</button>
+    <button class="btn" id="download" disabled>ดาวน์โหลด</button>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" multiple hidden>
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<audio id="snap" src="https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3" preload="auto"></audio>
+
 <script>
-(async function(){
-  // Elements
-  const pageChoose = document.getElementById('page-choose');
-  const pageBooth = document.getElementById('page-booth');
-  const cards = document.querySelectorAll('.card');
-  const video = document.getElementById('video');
-  const shutter = document.getElementById('shutter');
-  const btnUpload = document.getElementById('btnUpload');
-  const btnReset = document.getElementById('btnReset');
-  const btnDownload = document.getElementById('btnDownload');
-  const btnPrint = document.getElementById('btnPrint');
-  const thumbs = document.getElementById('thumbs');
-  const countdownEl = document.getElementById('countdown');
-  const flashEl = document.getElementById('flash');
-  const progressBadge = document.getElementById('progressBadge');
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true;
-  const stickersContainer = document.getElementById('stickersContainer');
+let useFront=true,stream=null,captures=[],total=0;
+const video=document.getElementById('video');
+const shutter=document.getElementById('shutter');
+const switchBtn=document.getElementById('switch');
+const uploadBtn=document.getElementById('upload');
+const downloadBtn=document.getElementById('download');
+const fileInput=document.getElementById('fileInput');
+const gallery=document.getElementById('gallery');
+const progress=document.getElementById('progress');
+const snap=document.getElementById('snap');
+let selectedCount=0;
 
-  // State
-  let layout = 3;
-  let captures = []; // data URLs
-  let stream = null;
-  let useFront = true;
-  const countdownSeconds = 3;
+/* --- start camera --- */
+async function startCamera(){
+  if(stream){stream.getTracks().forEach(t=>t.stop());}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFront?'user':'environment'},audio:false});
+    video.srcObject=stream;
+  }catch(e){alert("ไม่สามารถเปิดกล้องได้");}
+}
+switchBtn.addEventListener("click",()=>{useFront=!useFront;startCamera();});
 
-  // Helper: show page
-  function showChoose(){ pageChoose.classList.add('active'); pageBooth.classList.remove('active'); }
-  function showBooth(){ pageChoose.classList.remove('active'); pageBooth.classList.add('active'); }
+/* --- change page --- */
+function startBooth(n){
+  selectedCount=n;captures=[];gallery.innerHTML="";
+  gallery.className="gallery "+(n==2?"two":n==3?"three":n==4?"four":"six");
+  document.getElementById("page-select").classList.remove("active");
+  document.getElementById("page-booth").classList.add("active");
+  startCamera();
+  updateProgress();
+}
 
-  // Choose layout
-  cards.forEach(card=>{
-    card.addEventListener('click', ()=>{
-      layout = parseInt(card.dataset.layout,10) || 3;
-      startCamera().catch(e=>console.warn(e));
-      captures = new Array(layout).fill(null);
-      renderThumbs();
-      updateProgress();
-      showBooth();
-    });
-    card.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') card.click(); });
-  });
+/* --- capture --- */
+function captureFrame(){
+  const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;
+  const ctx=c.getContext('2d');ctx.translate(c.width,0);ctx.scale(-1,1);
+  ctx.drawImage(video,0,0,c.width,c.height);
+  return c.toDataURL('image/png');
+}
+shutter.addEventListener("click",()=>{if(captures.length>=selectedCount)return;doFlash();captures.push(captureFrame());renderGallery();});
+uploadBtn.addEventListener("click",()=>fileInput.click());
+fileInput.addEventListener("change",e=>{
+  const files=[...e.target.files].slice(0,selectedCount);
+  captures=[];
+  files.forEach(f=>{const r=new FileReader();r.onload=()=>{captures.push(r.result);renderGallery();};r.readAsDataURL(f);});
+});
+function doFlash(){snap.currentTime=0;snap.play();}
 
-  // Start camera
-  async function startCamera(){
-    // stop previous
-    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
-    try{
-      const constraints = { video: { facingMode: useFront ? 'user' : 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false };
-      stream = await navigator.mediaDevices.getUserMedia(constraints);
-      video.srcObject = stream;
-      await video.play();
-    }catch(err){
-      alert('ไม่สามารถเปิดกล้องได้ — กรุณาอนุญาตกล้องหรือเปิดใน HTTPS/localhost\n' + (err && err.message ? err.message : ''));
-      throw err;
-    }
+/* --- render gallery --- */
+function renderGallery(){
+  gallery.innerHTML="";
+  captures.forEach(src=>gallery.appendChild(makePolaroid(src)));
+  updateProgress();
+  downloadBtn.disabled=(captures.length<selectedCount);
+}
+function updateProgress(){
+  progress.textContent=`ถ่ายแล้ว ${captures.length}/${selectedCount}`;
+}
+
+/* --- make polaroid with ✦ decorations --- */
+function makePolaroid(src){
+  const wrap=document.createElement("div");
+  wrap.className="polaroid";
+  const img=document.createElement("img");
+  img.src=src;wrap.appendChild(img);
+  const colors=["#FFD6E8","#A7D8F7","#FFF2A7","#CBA7F7","#A7F7C4"];
+  for(let i=0;i<4;i++){
+    const deco=document.createElement("span");
+    deco.className="deco";
+    deco.textContent="✦";
+    deco.style.color=colors[Math.floor(Math.random()*colors.length)];
+    deco.style.top=Math.random()*90+"%";
+    deco.style.left=Math.random()*90+"%";
+    wrap.appendChild(deco);
   }
+  return wrap;
+}
 
-  // Switch camera (if available)
-  // Add later if needed: switch button, for now use front by default
-  // Capture frame (non-mirrored result)
-  function captureFrame(){
-    // Use natural video size
-    const vw = video.videoWidth || 1280;
-    const vh = video.videoHeight || 720;
-    const c = document.createElement('canvas');
-    c.width = vw; c.height = vh;
-    const ctx = c.getContext('2d');
-    // draw mirrored as shown (video is visually mirrored via CSS), but for final we can keep mirror — user expects selfie.
-    ctx.translate(c.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0, c.width, c.height);
-    return c.toDataURL('image/png');
-  }
-
-  // Countdown + flash effect
-  function doFlash(){
-    const snd = new Audio('https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3');
-    snd.play().catch(()=>{});
-    flashEl.classList.add('show');
-    setTimeout(()=>flashEl.classList.remove('show'), 160);
-  }
-
-  async function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-  // Sticker decorations (90s), render a few decorative emojis around preview
-  function renderStickers(){
-    stickersContainer.innerHTML = '';
-    const icons = ['⭐','✨','💖','🌸','🎀','💫'];
-    for(let i=0;i<5;i++){
-      const el = document.createElement('div');
-      el.className = 'sticker';
-      el.style.left = (10 + Math.random()*80) + '%';
-      el.style.top = (5 + Math.random()*85) + '%';
-      el.style.fontSize = (12 + Math.random()*18) + 'px';
-      el.textContent = icons[Math.floor(Math.random()*icons.length)];
-      el.style.transform = `rotate(${(Math.random()*40)-20}deg)`;
-      stickersContainer.appendChild(el);
-    }
-  }
-
-  renderStickers();
-
-  // UI update
-  function updateProgress(){
-    const done = captures.filter(Boolean).length;
-    progressBadge.textContent = `📸 ${done} / ${layout}`;
-  }
-  function renderThumbs(){
-    thumbs.innerHTML = '';
-    // set grid according to layout for right column preview:
-    if(layout===2 || layout===3){ thumbs.style.gridTemplateColumns = '1fr'; }
-    else if(layout===4){ thumbs.style.gridTemplateColumns = '1fr 1fr'; }
-    else if(layout===6){ thumbs.style.gridTemplateColumns = '1fr 1fr 1fr'; }
-    for(let i=0;i<layout;i++){
-      const div = document.createElement('div');
-      div.className = 'thumb';
-      div.id = 'thumb-'+i;
-      const tag = document.createElement('div'); tag.className = 'tag'; tag.textContent = (i+1);
-      div.appendChild(tag);
-      if(captures[i]){
-        const img = document.createElement('img'); img.src = captures[i]; img.alt = 'shot '+(i+1);
-        div.appendChild(img);
-      }
-      thumbs.appendChild(div);
-    }
-  }
-
-  // Take sequence: capture layout times with countdown
-  shutter.addEventListener('click', async ()=>{
-    // ensure camera running
-    if(!stream){ try{ await startCamera(); }catch(e){return;} }
-    // reset captures
-    captures = new Array(layout).fill(null);
-    renderThumbs();
-    updateProgress();
-    for(let i=0;i<layout;i++){
-      // countdown
-      for(let s = countdownSeconds; s>=1; s--){
-        countdownEl.textContent = s;
-        await wait(1000);
-      }
-      countdownEl.textContent = '';
-      // capture
-      doFlash();
-      const dataUrl = captureFrame();
-      captures[i] = dataUrl;
-      renderThumbs();
-      updateProgress();
-      // short pause between shots
-      if(i < layout-1) await wait(700);
-    }
-    // enable actions
-    btnDownload.disabled = false;
-    btnPrint.disabled = false;
-    // show result area in same page (thumbs already show)
-  });
-
-  // Upload images instead of capture
-  btnUpload.addEventListener('click', ()=> fileInput.click());
-  fileInput.addEventListener('change', async (ev)=>{
-    const files = Array.from(ev.target.files).slice(0, layout);
-    if(files.length < layout){
-      alert(`กรุณาเลือก ${layout} รูป (เลือก ${files.length} รูปที่เลือกมาไม่พอ)`);
-      return;
-    }
-    captures = new Array(layout).fill(null);
-    for(let i=0;i<files.length;i++){
-      const file = files[i];
-      captures[i] = await new Promise((res,rej)=>{
-        const r = new FileReader();
-        r.onload = ()=>res(r.result);
-        r.onerror = rej;
-        r.readAsDataURL(file);
-      });
-      renderThumbs();
-      updateProgress();
-    }
-    btnDownload.disabled = false;
-    btnPrint.disabled = false;
-  });
-
-  // Reset -> back to choose
-  btnReset.addEventListener('click', async ()=>{
-    // stop camera
-    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
-    captures = [];
-    renderThumbs();
-    updateProgress();
-    renderStickers();
-    showChoose();
-    // scroll to top
-    window.scrollTo({top:0,behavior:'smooth'});
-  });
-
-  // Build final combined image (4x6 inches at 300 DPI -> 1200 x 1800 px)
-  // Layout mapping:
-  // 2 => cols=1 rows=2
-  // 3 => cols=1 rows=3
-  // 4 => cols=2 rows=2
-  // 6 => cols=3 rows=2
-  function layoutGrid(layout){
-    if(layout === 2) return {cols:1, rows:2};
-    if(layout === 3) return {cols:1, rows:3};
-    if(layout === 4) return {cols:2, rows:2};
-    if(layout === 6) return {cols:3, rows:2};
-    return {cols:1, rows:layout};
-  }
-
-  // draw small decorative sticker on final canvas
-  function drawDecoration(ctx, x, y, size, icon){
-    ctx.save();
-    ctx.font = `${size}px serif`;
-    ctx.fillText(icon, x, y);
-    ctx.restore();
-  }
-
-  btnDownload.addEventListener('click', async ()=>{
-    if(!captures || captures.filter(Boolean).length === 0){
-      alert('ยังไม่ได้ถ่ายหรืออัปโหลดรูป');
-      return;
-    }
-    // ensure all slots filled: if some empty, fill with blank white
-    // But better require full: ask user
-    const filled = captures.filter(Boolean).length;
-    if(filled < layout){
-      if(!confirm(`คุณเลือก ${layout} รูป แต่มีรูป ${filled} รูปเท่านั้น — ดาวน์โหลดได้หรือไม่?` ) ){
-        return;
+/* --- download final --- */
+downloadBtn.addEventListener("click",()=>{
+  if(captures.length<selectedCount)return;
+  const zipCanvas=document.createElement("canvas");
+  const cols=(selectedCount==4||selectedCount==6)?(selectedCount==4?2:3):1;
+  const rows=Math.ceil(selectedCount/cols);
+  const W=cols*500+40, H=rows*600+60;
+  zipCanvas.width=W; zipCanvas.height=H;
+  const ctx=zipCanvas.getContext("2d");
+  ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
+  captures.forEach((src,i)=>{
+    const img=new Image();img.src=src;
+    img.onload=()=>{const col=i%cols,row=Math.floor(i/cols);
+      ctx.drawImage(img,col*500+20,row*600+20,460,560);
+      if(i==captures.length-1){
+        const a=document.createElement("a");
+        a.href=zipCanvas.toDataURL("image/png");
+        a.download="SENA_Photobooth.png";
+        a.click();
       }
     }
-    // final canvas size (4x6 ratio). We'll use 1200x1800 px for good quality
-    const W = 1200, H = 1800;
-    const c = document.createElement('canvas'); c.width = W; c.height = H;
-    const ctx = c.getContext('2d');
-    // white background
-    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
-
-    // header band (top)
-    ctx.fillStyle = '#8fcffb';
-    ctx.fillRect(0, 30, W, 140);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 48px "Quicksand", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('SENA PHOTOBOOTH', W/2, 100);
-
-    // compute grid
-    const {cols, rows} = layoutGrid(layout);
-    const margin = 60;
-    const gap = 30;
-    const gridW = W - margin*2 - (cols-1)*gap;
-    const gridH = H - 260 - (rows-1)*gap; // leave space for header + footer
-    const cellW = Math.floor(gridW / cols);
-    const cellH = Math.floor(gridH / rows);
-
-    // draw each image into grid
-    for(let i=0;i<layout;i++){
-      const imgSrc = captures[i] || null;
-      // compute position
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const dx = margin + col*(cellW + gap);
-      const dy = 190 + row*(cellH + gap);
-
-      // draw polaroid-like border
-      const pad = 12;
-      const polW = cellW;
-      const polH = cellH;
-      ctx.fillStyle = '#ffffff';
-      // border rectangle (slightly larger)
-      ctx.fillRect(dx - pad, dy - pad, polW + pad*2, polH + pad*2 + 30); // extra bottom for caption area
-      // shadow
-      ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,0.18)';
-      ctx.shadowBlur = 18;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(dx - pad, dy - pad, polW + pad*2, polH + pad*2 + 30);
-      ctx.restore();
-
-      if(imgSrc){
-        // load and draw with cover (crop center)
-        const img = await new Promise((res,rej)=>{
-          const im = new Image(); im.onload = ()=>res(im); im.onerror = rej; im.src = imgSrc;
-        });
-        // calculate scale to cover
-        const scale = Math.max(polW / img.width, polH / img.height);
-        const iw = img.width * scale;
-        const ih = img.height * scale;
-        const sx = (iw - polW) / 2;
-        const sy = (ih - polH) / 2;
-        // draw to temp canvas to handle cropping
-        const temp = document.createElement('canvas'); temp.width = iw; temp.height = ih;
-        const tctx = temp.getContext('2d');
-        tctx.drawImage(img, 0, 0, iw, ih);
-        // draw portion to final
-        ctx.drawImage(temp, sx, sy, polW, polH, dx, dy, polW, polH);
-      } else {
-        // empty placeholder
-        ctx.fillStyle = '#f6f7fb';
-        ctx.fillRect(dx, dy, polW, polH);
-        ctx.fillStyle = 'rgba(0,0,0,0.12)';
-        ctx.font = '20px Quicksand';
-        ctx.textAlign = 'center';
-        ctx.fillText('No Image', dx + polW/2, dy + polH/2);
-      }
-
-      // draw small decorations per frame (top-left, bottom-right, random)
-      const decorations = ['⭐','✨','💖','🌸','🎀'];
-      const deco1 = decorations[(i*3) % decorations.length];
-      const deco2 = decorations[(i*5+1) % decorations.length];
-      ctx.font = '28px serif';
-      ctx.fillText(deco1, dx + 18, dy + 32);
-      ctx.fillText(deco2, dx + polW - 24, dy + polH - 10);
-      // small ribbon strip on bottom of polaroid
-      ctx.fillStyle = 'rgba(0,0,0,0.03)';
-      ctx.fillRect(dx, dy + polH + 6, polW, 8);
-    }
-
-    // footer credit
-    ctx.fillStyle = '#203040';
-    ctx.font = 'bold 20px Quicksand';
-    ctx.textAlign = 'center';
-    ctx.fillText('saphasena68', W/2, H-40);
-
-    // trigger download
-    const dataURL = c.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = `SENA_PHOTOBOOTH_${Date.now()}.png`;
-    a.click();
   });
-
-  // Print (open new window with image)
-  btnPrint.addEventListener('click', async ()=>{
-    if(!captures || captures.filter(Boolean).length === 0){ alert('ยังไม่มีรูปให้พิมพ์'); return; }
-    // reuse build: create final image then open in new window for printing
-    const W = 1200, H = 1800;
-    const c = document.createElement('canvas'); c.width = W; c.height = H;
-    const ctx = c.getContext('2d');
-    // draw minimal: white bg + merged images similar to download
-    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
-    ctx.fillStyle = '#8fcffb';
-    ctx.fillRect(0, 30, W, 140);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 48px "Quicksand", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('SENA PHOTOBOOTH', W/2, 100);
-    const {cols, rows} = layoutGrid(layout);
-    const margin = 60, gap = 30;
-    const gridW = W - margin*2 - (cols-1)*gap;
-    const gridH = H - 260 - (rows-1)*gap;
-    const cellW = Math.floor(gridW / cols);
-    const cellH = Math.floor(gridH / rows);
-    for(let i=0;i<layout;i++){
-      const imgSrc = captures[i] || null;
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const dx = margin + col*(cellW + gap);
-      const dy = 190 + row*(cellH + gap);
-      ctx.fillStyle = '#fff'; ctx.fillRect(dx - 12, dy - 12, cellW + 24, cellH + 36);
-      if(imgSrc){
-        const img = await new Promise((res,rej)=>{ const im = new Image(); im.onload = ()=>res(im); im.onerror = rej; im.src = imgSrc; });
-        const scale = Math.max(cellW / img.width, cellH / img.height);
-        const iw = img.width * scale, ih = img.height * scale;
-        const sx = (iw - cellW) / 2, sy = (ih - cellH) / 2;
-        const temp = document.createElement('canvas'); temp.width=iw; temp.height=ih; temp.getContext('2d').drawImage(img,0,0,iw,ih);
-        ctx.drawImage(temp, sx, sy, cellW, cellH, dx, dy, cellW, cellH);
-      } else {
-        ctx.fillStyle = '#f6f7fb'; ctx.fillRect(dx,dy,cellW,cellH);
-      }
-    }
-    ctx.fillStyle = '#203040'; ctx.font = 'bold 20px Quicksand'; ctx.textAlign = 'center'; ctx.fillText('saphasena68', W/2, H-40);
-    const imgURL = c.toDataURL('image/png');
-    const w = window.open('');
-    w.document.write(`<img src="${imgURL}" style="width:100%"/>`);
-    w.document.close();
-    w.focus();
-    w.print();
-  });
-
-  // Initialize default
-  function init(){
-    renderThumbs();
-    updateProgress();
-  }
-  init();
-
-  // ensure graceful stop when leaving
-  window.addEventListener('beforeunload', ()=>{ if(stream) stream.getTracks().forEach(t=>t.stop()); });
-
-  // show choose page initially
-  showChoose();
-
-})();
+});
 </script>
 </body>
 </html>

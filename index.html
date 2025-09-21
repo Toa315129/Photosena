@@ -1,205 +1,540 @@
-<!doctype html>
+<<!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SENA PHOTOBOOTH</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SENA PHOTOBOOTH — Professional</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --bg:#fdfaf4;
-  --blue:#a7d8f7;
-  --pink:#ffd6e8;
-  --text:#333;
+  --bg:#fbf8f4;      /* cream */
+  --accent:#7fbef7;  /* blue accent */
+  --muted:#f2efec;
+  --ink:#213040;
+  --soft:#ffdfe8;
+  --shadow: rgba(16,24,40,0.08);
+  --polaroid-gap:24px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);font-family:"Quicksand",sans-serif;}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:"Quicksand",system-ui,-apple-system,"Segoe UI",Roboto,"Playfair Display",serif;color:var(--ink)}
+a{color:inherit}
+.container{max-width:1100px;margin:28px auto;padding:28px;border-radius:14px;background:#fff;border:6px solid var(--muted);box-shadow:0 18px 40px var(--shadow)}
 
-/* container หลัก */
-.page{display:none;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-.page.active{display:flex;}
-
-/* header */
-.header{font-size:42px;font-weight:700;color:var(--blue);margin-bottom:20px;text-align:center;}
-
-/* ปุ่ม */
-.btn{
-  padding:12px 18px;
-  border-radius:12px;
-  border:2px solid var(--blue);
-  background:#fff;
-  color:var(--text);
-  font-weight:600;
-  cursor:pointer;
-  margin:6px;
-  transition:0.2s;
+/* Header / Cover */
+.cover{
+  display:flex;align-items:center;gap:18px;padding:24px;border-radius:12px;background:linear-gradient(90deg,#ffffff, #f8fbff);
+  border:1px solid rgba(0,0,0,0.02);box-shadow:inset 0 -6px 0 rgba(127,190,247,0.06);
 }
-.btn:hover{background:var(--blue);color:#fff}
-.shutter{width:80px;height:80px;border-radius:50%;border:6px solid var(--blue);background:#fff;cursor:pointer;margin:12px;}
-.shutter:hover{background:var(--pink)}
-
-/* video */
-.preview{width:300px;height:400px;background:#fff;border-radius:12px;overflow:hidden;position:relative;border:4px solid var(--blue);}
-#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
-
-/* gallery */
-.gallery{display:grid;gap:14px;margin-top:16px;}
-.gallery.two{grid-template-columns:1fr;}
-.gallery.three{grid-template-columns:1fr;}
-.gallery.four{grid-template-columns:1fr 1fr;}
-.gallery.six{grid-template-columns:1fr 1fr 1fr;}
-.polaroid{
-  position:relative;
-  background:#fff;
-  padding:8px 8px 24px 8px;
-  border-radius:10px;
-  box-shadow:0 6px 14px rgba(0,0,0,0.15);
+.logo{
+  width:72px;height:72px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:"Playfair Display",serif;font-size:28px;
 }
-.polaroid img{width:100%;height:100%;object-fit:cover;border-radius:6px;}
-.deco{
-  position:absolute;
-  font-size:18px;
-  pointer-events:none;
-  opacity:0.8;
+.title{font-family:"Playfair Display",serif;font-size:32px;color:var(--ink);margin:0}
+.subtitle{margin:0;color:rgba(0,0,0,0.55);font-size:13px}
+
+/* pages */
+.page{display:none;padding:18px}
+.page.active{display:block}
+
+/* selection cards */
+.grid-select{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+.card{
+  width:180px;border-radius:12px;background:#fff;padding:12px;border:2px solid rgba(0,0,0,0.04);cursor:pointer;box-shadow:0 10px 24px var(--shadow);
+  transition:transform .16s, box-shadow .16s;
+  text-align:center;
 }
-.note{text-align:center;font-size:14px;color:#555;margin-top:6px}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(0,0,0,0.12)}
+.card .mock{height:120px;border-radius:8px;background:linear-gradient(180deg,#f7fbff,#ffffff);display:flex;flex-wrap:wrap;padding:6px;align-content:space-between;gap:6px}
+.card .dot{background:#eef8ff;border-radius:6px;flex:1 0 45%;height:44%}
+
+/* booth layout */
+.booth{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center;margin-top:18px}
+.preview-panel{min-width:340px;flex:1;display:flex;flex-direction:column;align-items:center;gap:12px}
+.preview-window{width:420px;height:560px;border-radius:12px;overflow:hidden;background:#fff;border:8px solid #fff;box-shadow:0 20px 40px rgba(0,0,0,0.08);position:relative}
+video#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.progress{position:absolute;left:12px;top:12px;background:rgba(255,255,255,0.9);padding:8px 10px;border-radius:14px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+.countdown{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;color:var(--accent);font-weight:800;pointer-events:none}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .15s;pointer-events:none}
+.flash.show{opacity:.88}
+
+/* controls */
+.controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.btn{padding:10px 14px;border-radius:12px;border:2px solid var(--accent);background:#fff;color:var(--ink);font-weight:700;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.shutter{width:100px;height:100px;border-radius:50%;background:#fff;border:10px solid var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 18px 34px rgba(0,0,0,0.12)}
+.shutter:active{transform:scale(.98)}
+
+/* right column — thumbs */
+.right-col{width:360px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.thumbs{width:100%;display:grid;gap:12px}
+.thumb{background:#fff;border-radius:12px;padding:8px;box-shadow:0 12px 30px rgba(0,0,0,0.08);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.thumb .polaroid{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.polaroid-inner{background:#fff;padding:10px 10px 26px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.06);width:100%;height:100%;position:relative;overflow:hidden}
+.polaroid-inner img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.thumb .index{position:absolute;left:10px;top:10px;background:rgba(255,255,255,0.95);padding:6px 8px;border-radius:8px;font-weight:700}
+
+/* layout adjustment for thumbs grid */
+.thumbs.grid-1{grid-template-columns:1fr}
+.thumbs.grid-2{grid-template-columns:1fr 1fr}
+.thumbs.grid-3{grid-template-columns:1fr 1fr 1fr}
+
+/* footer */
+.footer{display:flex;justify-content:center;padding:18px;color:rgba(0,0,0,0.55);font-size:14px}
+.small-note{font-size:13px;color:rgba(0,0,0,0.6);text-align:center;margin-top:6px}
+
+/* responsive */
+@media(max-width:960px){
+  .preview-window{width:320px;height:440px}
+  .right-col{width:100%}
+  .thumbs.grid-3{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- หน้าเลือกจำนวน -->
-<div class="page active" id="page-select">
-  <div class="header">SENA PHOTOBOOTH</div>
-  <p style="margin-bottom:16px;color:var(--text)">เลือกจำนวนช่อง</p>
-  <div>
-    <button class="btn" onclick="startBooth(2)">2 ช่อง</button>
-    <button class="btn" onclick="startBooth(3)">3 ช่อง</button>
-    <button class="btn" onclick="startBooth(4)">4 ช่อง</button>
-    <button class="btn" onclick="startBooth(6)">6 ช่อง</button>
+<div class="container">
+
+  <!-- COVER / TOP -->
+  <div class="cover" role="banner" aria-label="Sena Photobooth banner">
+    <div class="logo">S</div>
+    <div>
+      <h1 class="title">SENA PHOTOBOOTH</h1>
+      <p class="subtitle">Minimal • Professional • Polaroid vibes</p>
+    </div>
   </div>
+
+  <!-- PAGE: SELECT (default) -->
+  <section id="page-select" class="page active" aria-hidden="false">
+    <h2 style="text-align:center;margin-top:18px;font-family:'Playfair Display',serif;">เลือกรูปแบบ</h2>
+    <p style="text-align:center;color:rgba(0,0,0,0.6)">เลือกจำนวนรูปที่ต้องการ — ระบบจะจัดกรอบแบบโพลารอยด์อย่างสวยงาม</p>
+
+    <div class="grid-select" role="list" aria-label="Choose number of photos">
+      <div class="card" data-layout="2" tabindex="0" role="button" aria-pressed="false" title="2 รูป — บน/ล่าง">
+        <div class="mock">
+          <div class="dot" style="width:100%;height:48%"></div>
+          <div class="dot" style="width:100%;height:48%"></div>
+        </div>
+        <div style="margin-top:10px;font-weight:700">2 รูป — บน / ล่าง</div>
+      </div>
+
+      <div class="card" data-layout="3" tabindex="0" role="button" title="3 รูป — แนวตั้ง">
+        <div class="mock">
+          <div class="dot" style="width:100%;height:30%"></div>
+          <div class="dot" style="width:100%;height:30%"></div>
+          <div class="dot" style="width:100%;height:30%"></div>
+        </div>
+        <div style="margin-top:10px;font-weight:700">3 รูป — แนวตั้ง</div>
+      </div>
+
+      <div class="card" data-layout="4" tabindex="0" role="button" title="4 รูป — 2x2">
+        <div class="mock">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div style="margin-top:10px;font-weight:700">4 รูป — 2×2</div>
+      </div>
+
+      <div class="card" data-layout="6" tabindex="0" role="button" title="6 รูป — 3x2">
+        <div class="mock">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div style="margin-top:10px;font-weight:700">6 รูป — 3×2</div>
+      </div>
+    </div>
+
+    <p class="small-note">เมื่อเลือกแล้ว หน้าโฟโต้บูธจะเริ่ม — อนุญาตกล้องเมื่อเบราว์เซอร์ถาม</p>
+  </section>
+
+  <!-- PAGE: BOOTH -->
+  <section id="page-booth" class="page" aria-hidden="true">
+    <div class="booth">
+      <div class="preview-panel" aria-live="polite">
+        <div class="preview-window" role="region" aria-label="camera preview">
+          <video id="video" autoplay playsinline></video>
+          <div class="progress" id="progress">📸 0 / 0</div>
+          <div class="countdown" id="countdown" aria-hidden="true"></div>
+          <div class="flash" id="flash"></div>
+          <!-- stickers container (decorations in preview) -->
+          <div id="stickers" aria-hidden="true"></div>
+        </div>
+
+        <div class="controls" role="toolbar" aria-label="photobooth controls">
+          <div class="shutter" id="shutter" role="button" aria-label="ถ่ายภาพ"></div>
+          <button class="btn" id="btnUpload">Upload</button>
+          <button class="btn" id="btnReset">Reset</button>
+          <button class="btn" id="btnDownload" disabled>Download (4×6)</button>
+          <button class="btn" id="btnPrint" disabled>Print</button>
+        </div>
+
+        <p class="small-note" id="note-camera">อนุญาตกล้องแล้วกดปุ่มถ่าย (หนึ่งรูปต่อหนึ่งช็อต)</p>
+      </div>
+
+      <div class="right-col">
+        <div style="font-weight:700">ตัวอย่าง (Polaroid)</div>
+        <div id="thumbs" class="thumbs grid-1" aria-live="polite" role="list" style="width:100%;margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">saphasena68 — Tomoji Studio</div>
 </div>
 
-<!-- หน้า photobooth -->
-<div class="page" id="page-booth">
-  <div class="header">SENA PHOTOBOOTH</div>
-  <div class="preview"><video id="video" autoplay playsinline></video></div>
-  <div class="note" id="progress">ยังไม่ได้ถ่าย</div>
-  <div style="margin-top:12px">
-    <div class="shutter" id="shutter"></div>
-  </div>
-  <div>
-    <button class="btn" id="switch">สลับกล้อง</button>
-    <button class="btn" id="upload">อัปโหลด</button>
-    <button class="btn" id="download" disabled>ดาวน์โหลด</button>
-  </div>
-  <input type="file" id="fileInput" accept="image/*" multiple hidden>
-  <div class="gallery" id="gallery"></div>
-</div>
-
-<audio id="snap" src="https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3" preload="auto"></audio>
-
+<!-- QR lib not required; download builds canvas image -->
 <script>
-let useFront=true,stream=null,captures=[],total=0;
-const video=document.getElementById('video');
-const shutter=document.getElementById('shutter');
-const switchBtn=document.getElementById('switch');
-const uploadBtn=document.getElementById('upload');
-const downloadBtn=document.getElementById('download');
-const fileInput=document.getElementById('fileInput');
-const gallery=document.getElementById('gallery');
-const progress=document.getElementById('progress');
-const snap=document.getElementById('snap');
-let selectedCount=0;
+/* Professional Photobooth — single-file
+   - Page flow: select -> booth
+   - layout options: 2 / 3 / 4 / 6 (6 => 3 cols × 2 rows)
+   - Polaroid frames + ✦ decorations (randomized, tasteful)
+   - Capture from camera or upload
+   - Download combined 4x6 (1200x1800) with header + credit
+*/
 
-/* --- start camera --- */
-async function startCamera(){
-  if(stream){stream.getTracks().forEach(t=>t.stop());}
-  try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:useFront?'user':'environment'},audio:false});
-    video.srcObject=stream;
-  }catch(e){alert("ไม่สามารถเปิดกล้องได้");}
-}
-switchBtn.addEventListener("click",()=>{useFront=!useFront;startCamera();});
+(() => {
+  // elements
+  const pageSelect = document.getElementById('page-select');
+  const pageBooth = document.getElementById('page-booth');
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const video = document.getElementById('video');
+  const shutter = document.getElementById('shutter');
+  const btnUpload = document.getElementById('btnUpload');
+  const btnReset = document.getElementById('btnReset');
+  const btnDownload = document.getElementById('btnDownload');
+  const btnPrint = document.getElementById('btnPrint');
+  const thumbs = document.getElementById('thumbs');
+  const progressEl = document.getElementById('progress');
+  const countdownEl = document.getElementById('countdown');
+  const flashEl = document.getElementById('flash');
+  const stickersEl = document.getElementById('stickers');
+  const noteCamera = document.getElementById('note-camera');
 
-/* --- change page --- */
-function startBooth(n){
-  selectedCount=n;captures=[];gallery.innerHTML="";
-  gallery.className="gallery "+(n==2?"two":n==3?"three":n==4?"four":"six");
-  document.getElementById("page-select").classList.remove("active");
-  document.getElementById("page-booth").classList.add("active");
-  startCamera();
-  updateProgress();
-}
+  let layout = 3;
+  let captures = [];
+  let stream = null;
+  let useFront = true;
+  const countdownSeconds = 3;
+  const gapBetweenShots = 1000; // 1s gap
 
-/* --- capture --- */
-function captureFrame(){
-  const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;
-  const ctx=c.getContext('2d');ctx.translate(c.width,0);ctx.scale(-1,1);
-  ctx.drawImage(video,0,0,c.width,c.height);
-  return c.toDataURL('image/png');
-}
-shutter.addEventListener("click",()=>{if(captures.length>=selectedCount)return;doFlash();captures.push(captureFrame());renderGallery();});
-uploadBtn.addEventListener("click",()=>fileInput.click());
-fileInput.addEventListener("change",e=>{
-  const files=[...e.target.files].slice(0,selectedCount);
-  captures=[];
-  files.forEach(f=>{const r=new FileReader();r.onload=()=>{captures.push(r.result);renderGallery();};r.readAsDataURL(f);});
-});
-function doFlash(){snap.currentTime=0;snap.play();}
+  // helper: show pages
+  function showSelect(){ pageSelect.classList.add('active'); pageBooth.classList.remove('active'); pageSelect.setAttribute('aria-hidden','false'); pageBooth.setAttribute('aria-hidden','true'); }
+  function showBooth(){ pageSelect.classList.remove('active'); pageBooth.classList.add('active'); pageSelect.setAttribute('aria-hidden','true'); pageBooth.setAttribute('aria-hidden','false'); }
 
-/* --- render gallery --- */
-function renderGallery(){
-  gallery.innerHTML="";
-  captures.forEach(src=>gallery.appendChild(makePolaroid(src)));
-  updateProgress();
-  downloadBtn.disabled=(captures.length<selectedCount);
-}
-function updateProgress(){
-  progress.textContent=`ถ่ายแล้ว ${captures.length}/${selectedCount}`;
-}
-
-/* --- make polaroid with ✦ decorations --- */
-function makePolaroid(src){
-  const wrap=document.createElement("div");
-  wrap.className="polaroid";
-  const img=document.createElement("img");
-  img.src=src;wrap.appendChild(img);
-  const colors=["#FFD6E8","#A7D8F7","#FFF2A7","#CBA7F7","#A7F7C4"];
-  for(let i=0;i<4;i++){
-    const deco=document.createElement("span");
-    deco.className="deco";
-    deco.textContent="✦";
-    deco.style.color=colors[Math.floor(Math.random()*colors.length)];
-    deco.style.top=Math.random()*90+"%";
-    deco.style.left=Math.random()*90+"%";
-    wrap.appendChild(deco);
-  }
-  return wrap;
-}
-
-/* --- download final --- */
-downloadBtn.addEventListener("click",()=>{
-  if(captures.length<selectedCount)return;
-  const zipCanvas=document.createElement("canvas");
-  const cols=(selectedCount==4||selectedCount==6)?(selectedCount==4?2:3):1;
-  const rows=Math.ceil(selectedCount/cols);
-  const W=cols*500+40, H=rows*600+60;
-  zipCanvas.width=W; zipCanvas.height=H;
-  const ctx=zipCanvas.getContext("2d");
-  ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
-  captures.forEach((src,i)=>{
-    const img=new Image();img.src=src;
-    img.onload=()=>{const col=i%cols,row=Math.floor(i/cols);
-      ctx.drawImage(img,col*500+20,row*600+20,460,560);
-      if(i==captures.length-1){
-        const a=document.createElement("a");
-        a.href=zipCanvas.toDataURL("image/png");
-        a.download="SENA_Photobooth.png";
-        a.click();
-      }
-    }
+  // choose handlers
+  cards.forEach(card=>{
+    card.addEventListener('click', () => {
+      layout = parseInt(card.dataset.layout, 10) || 3;
+      captures = new Array(layout).fill(null);
+      applyThumbGrid();
+      updateProgress();
+      startCamera().then(() => {
+        renderRandomStickers();
+        showBooth();
+      }).catch(err=>{
+        // still show booth but warn user
+        renderRandomStickers();
+        showBooth();
+        console.warn(err);
+        noteCamera.textContent = 'ไม่สามารถเปิดกล้องอัตโนมัติ — ใช้ปุ่ม Upload แทนหรือรีเฟรชแล้วอนุญาตกล้อง';
+      });
+    });
+    card.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') card.click(); });
   });
-});
+
+  // start camera
+  async function startCamera(){
+    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
+    try{
+      const constraints = { video: { facingMode: useFront ? 'user' : 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false };
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
+      video.srcObject = stream;
+      await video.play();
+      noteCamera.textContent = 'กล้องพร้อม — กดปุ่มถ่าย';
+    }catch(err){
+      noteCamera.textContent = 'กรุณาอนุญาตกล้อง หรือใช้ปุ่ม Upload';
+      throw err;
+    }
+  }
+
+  // capture frame (mirror to match preview) - returns dataURL
+  function captureFrame(){
+    const vw = video.videoWidth || 1280;
+    const vh = video.videoHeight || 960;
+    const c = document.createElement('canvas'); c.width = vw; c.height = vh;
+    const ctx = c.getContext('2d');
+    // mirror to match preview
+    ctx.translate(c.width, 0); ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, c.width, c.height);
+    return c.toDataURL('image/png');
+  }
+
+  // countdown helper
+  function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+  async function countdown(seconds){
+    for(let s=seconds;s>0;s--){
+      countdownEl.textContent = s;
+      await wait(1000);
+    }
+    countdownEl.textContent = '';
+  }
+
+  // flash + sound
+  function doFlash(){
+    const snd = new Audio('https://cdn.jsdelivr.net/gh/naptha/talkdemo/snap.mp3');
+    snd.play().catch(()=>{});
+    flashEl.classList.add('show');
+    setTimeout(()=>flashEl.classList.remove('show'), 160);
+  }
+
+  // shutter sequence: capture layout shots with countdown and gaps
+  shutter.addEventListener('click', async () => {
+    if(captures.every(Boolean)){ /* already filled, allow re-take? */ captures = new Array(layout).fill(null); renderThumbs(); updateProgress(); btnDownload.disabled = true; btnPrint.disabled = true; }
+    // ensure camera
+    if(!stream){
+      try{ await startCamera(); }catch(e){ alert('ไม่สามารถเข้าถึงกล้อง — ใช้ Upload แทน'); return; }
+    }
+    for(let i=0;i<layout;i++){
+      await countdown(countdownSeconds);
+      doFlash();
+      captures[i] = captureFrame();
+      renderThumbs();
+      updateProgress();
+      // short gap
+      if(i < layout-1) await wait(gapBetweenShots);
+    }
+    // enable actions
+    btnDownload.disabled = false;
+    btnPrint.disabled = false;
+  });
+
+  // Upload
+  const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.multiple = true;
+  btnUpload.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files).slice(0, layout);
+    if(files.length < layout){
+      if(!confirm(`คุณเลือก ${files.length} รูป — ต้องการเติมเต็มแค่ ${layout} รูปหรือไม่? (OK = ใช้แค่ที่เลือก)`)) return;
+    }
+    captures = new Array(layout).fill(null);
+    for(let i=0;i<files.length;i++){
+      captures[i] = await readFileAsDataURL(files[i]);
+      renderThumbs();
+      updateProgress();
+    }
+    btnDownload.disabled = captures.filter(Boolean).length < 1;
+    btnPrint.disabled = captures.filter(Boolean).length < 1;
+  });
+
+  function readFileAsDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload = ()=>res(r.result); r.onerror = rej; r.readAsDataURL(file); }); }
+
+  // reset
+  btnReset.addEventListener('click', ()=>{
+    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+    captures = [];
+    renderThumbs();
+    updateProgress();
+    showSelect();
+  });
+
+  // thumbs rendering and grid classes
+  function applyThumbGrid(){
+    if(layout === 2 || layout === 3){
+      thumbs.className = 'thumbs grid-1';
+    } else if(layout === 4){
+      thumbs.className = 'thumbs grid-2';
+    } else if(layout === 6){
+      // for preview on right, show 3 columns (3 wide) but responsive falls back
+      thumbs.className = 'thumbs grid-3';
+    } else {
+      thumbs.className = 'thumbs grid-1';
+    }
+    renderThumbs();
+  }
+
+  function renderThumbs(){
+    thumbs.innerHTML = '';
+    for(let i=0;i<layout;i++){
+      const wrapper = document.createElement('div'); wrapper.className = 'thumb';
+      const idx = document.createElement('div'); idx.className = 'index'; idx.textContent = (i+1);
+      wrapper.appendChild(idx);
+      const pol = document.createElement('div'); pol.className = 'polaroid';
+      const inner = document.createElement('div'); inner.className = 'polaroid-inner';
+      if(captures[i]){
+        const img = document.createElement('img'); img.src = captures[i]; img.alt = 'shot '+(i+1);
+        inner.appendChild(img);
+      } else {
+        // placeholder
+        const ph = document.createElement('div'); ph.style.width='100%'; ph.style.height='100%'; ph.style.display='flex'; ph.style.alignItems='center'; ph.style.justifyContent='center'; ph.style.color='rgba(0,0,0,0.12)'; ph.textContent='Empty';
+        inner.appendChild(ph);
+      }
+      // decorations: add several ✦
+      for(let d=0; d<3; d++){
+        const deco = document.createElement('div');
+        deco.textContent = '✦';
+        deco.style.position = 'absolute';
+        deco.style.fontSize = (12 + Math.floor(Math.random()*12)) + 'px';
+        const colors = ['#FDD6E8','#A7D8F7','#FFF2A7','#CBA7F7','#A7F7C4'];
+        deco.style.color = colors[Math.floor(Math.random()*colors.length)];
+        deco.style.left = (8 + Math.random()*80) + '%';
+        deco.style.top = (8 + Math.random()*80) + '%';
+        deco.style.transform = `rotate(${Math.floor(Math.random()*60-30)}deg)`;
+        deco.style.pointerEvents = 'none';
+        inner.appendChild(deco);
+      }
+      pol.appendChild(inner);
+      wrapper.appendChild(pol);
+      thumbs.appendChild(wrapper);
+    }
+  }
+
+  // update progress badge
+  function updateProgress(){
+    const done = captures.filter(Boolean).length;
+    progressEl.textContent = `📸 ${done} / ${layout}`;
+  }
+
+  // decorative stickers around preview (90s but subtle)
+  function renderRandomStickers(){
+    stickersEl.innerHTML = '';
+    const icons = ['✦','✧','✨','★','❀'];
+    for(let i=0;i<6;i++){
+      const el = document.createElement('div');
+      el.textContent = icons[Math.floor(Math.random()*icons.length)];
+      el.style.position='absolute';
+      el.style.left = (4 + Math.random()*92) + '%';
+      el.style.top = (4 + Math.random()*92) + '%';
+      el.style.fontSize = (10 + Math.random()*22) + 'px';
+      el.style.opacity = 0.9;
+      el.style.transform = `rotate(${Math.floor(Math.random()*60-30)}deg)`;
+      el.style.pointerEvents = 'none';
+      stickersEl.appendChild(el);
+    }
+  }
+
+  // Download: build final 4x6 (1200x1800) canvas
+  btnDownload.addEventListener('click', async () => {
+    if(!captures || captures.filter(Boolean).length === 0){ alert('ยังไม่มีรูปให้ดาวน์โหลด'); return; }
+    // final canvas size 1200x1800
+    const W = 1200, H = 1800;
+    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // background
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
+
+    // header band
+    ctx.fillStyle = '#8fcffb';
+    ctx.fillRect(0, 36, W, 120);
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 36px "Playfair Display", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SENA PHOTOBOOTH', W/2, 36 + 60);
+
+    // grid compute
+    const grid = (layout === 2) ? {cols:1,rows:2} :
+                 (layout === 3) ? {cols:1,rows:3} :
+                 (layout === 4) ? {cols:2,rows:2} :
+                 (layout === 6) ? {cols:2,rows:3} : {cols:1,rows:layout};
+    const margin = 60;
+    const gap = 28;
+    const gridW = W - margin*2 - (grid.cols - 1)*gap;
+    const gridH = H - 240 - (grid.rows - 1)*gap; // leave header/footer
+    const cellW = Math.floor(gridW / grid.cols);
+    const cellH = Math.floor(gridH / grid.rows);
+
+    // draw images with polaroid border and small decorations
+    for(let i=0;i<layout;i++){
+      const col = i % grid.cols;
+      const row = Math.floor(i / grid.cols);
+      const dx = margin + col * (cellW + gap);
+      const dy = 180 + row * (cellH + gap);
+
+      // polaroid white border (larger)
+      const pad = 14;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(dx - pad, dy - pad, cellW + pad*2, cellH + pad*2 + 34);
+      // soft shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.18)';
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(dx - pad, dy - pad, cellW + pad*2, cellH + pad*2 + 34);
+      ctx.restore();
+
+      // draw photo if exists
+      if(captures[i]){
+        const img = await loadImage(captures[i]);
+        // scale to cover cellW x cellH
+        const scale = Math.max(cellW / img.width, cellH / img.height);
+        const iw = img.width * scale, ih = img.height * scale;
+        const sx = (iw - cellW) / 2, sy = (ih - cellH) / 2;
+        // draw to temporary canvas to handle cropping
+        const tmp = document.createElement('canvas'); tmp.width = iw; tmp.height = ih;
+        tmp.getContext('2d').drawImage(img, 0, 0, iw, ih);
+        ctx.drawImage(tmp, sx, sy, cellW, cellH, dx, dy, cellW, cellH);
+      } else {
+        // placeholder
+        ctx.fillStyle = '#f6f7fb';
+        ctx.fillRect(dx, dy, cellW, cellH);
+        ctx.fillStyle = 'rgba(0,0,0,0.08)';
+        ctx.font = '20px Quicksand';
+        ctx.textAlign = 'center';
+        ctx.fillText('No image', dx + cellW/2, dy + cellH/2);
+      }
+
+      // small decorations (✦) on corners
+      const decos = ['✦','✧','✨'];
+      ctx.font = '24px serif';
+      ctx.fillText(decos[(i*2) % decos.length], dx + 18, dy + 28);
+      ctx.fillText(decos[(i*3+1) % decos.length], dx + cellW - 28, dy + cellH - 8);
+    }
+
+    // footer credit
+    ctx.fillStyle = '#203040';
+    ctx.font = '600 20px "Quicksand", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('saphasena68', W/2, H - 32);
+
+    // download
+    const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download = `SENA_PHOTOBOOTH_${Date.now()}.png`; a.click();
+  });
+
+  // print (open img in new window)
+  btnPrint.addEventListener('click', async ()=>{
+    if(!captures || captures.filter(Boolean).length === 0){ alert('ยังไม่มีรูปให้พิมพ์'); return; }
+    // reuse download canvas builder to get dataURL (simple)
+    // We'll build smaller preview then open in new window
+    const tmpCanvas = document.createElement('canvas'); tmpCanvas.width = 1200; tmpCanvas.height = 1800;
+    const ctx = tmpCanvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,tmpCanvas.width,tmpCanvas.height);
+    ctx.fillStyle = '#8fcffb'; ctx.fillRect(0,36,tmpCanvas.width,120);
+    ctx.fillStyle = '#fff'; ctx.font='700 36px "Playfair Display", serif'; ctx.textAlign='center'; ctx.fillText('SENA PHOTOBOOTH', tmpCanvas.width/2, 36+60);
+    // (reuse simple layout)
+    const url = tmpCanvas.toDataURL('image/png');
+    const w = window.open('about:blank','_blank');
+    w.document.write(`<img src="${url}" style="width:100%">`);
+    w.document.close();
+    w.focus();
+    w.print();
+  });
+
+  // util: load image
+  function loadImage(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload = ()=>res(i); i.onerror = rej; i.src = src; }); }
+
+  // initialize: set accessible keyboard/click for shutter small improvements
+  shutter.tabIndex = 0;
+  shutter.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') shutter.click(); });
+
+  // stop camera on unload
+  window.addEventListener('beforeunload', ()=>{ if(stream) stream.getTracks().forEach(t=>t.stop()); });
+
+  // start with select visible
+  showSelect();
+
+})();
 </script>
+
 </body>
 </html>

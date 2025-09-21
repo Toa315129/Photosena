@@ -1,205 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photo Booth</title>
-<style>
-:root {
-  --blue: #e6f3ff;
-  --dark: #222;
-  --shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: white;
-  color: var(--dark);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-section {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-section.active { display: flex; }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tomoji Photo Booth</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Quicksand", sans-serif;
+      background: #fdfefe;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #2c7be5;
+      margin-bottom: 20px;
+    }
+    .hidden { display: none; }
 
-/* Layout Page */
-#layout-page button {
-  margin: 10px;
-  padding: 20px 40px;
-  border: none;
-  border-radius: 8px;
-  background: var(--blue);
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  transition: 0.2s;
-}
-#layout-page button:hover { transform: scale(1.05); }
+    /* หน้าเลือก */
+    .choose-container button {
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #2c7be5;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .choose-container button:hover { background: #1a5bbf; }
 
-/* Capture Page */
-#video {
-  width: 90%;
-  max-width: 400px;
-  border-radius: 12px;
-  background: black;
-}
-#countdown {
-  position: absolute;
-  font-size: 5rem;
-  font-weight: bold;
-  color: var(--dark);
-  text-align: center;
-}
-.capture-controls {
-  position: relative;
-  margin-top: 20px;
-}
-#capture-btn {
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  border: none;
-  background: var(--blue);
-  box-shadow: var(--shadow);
-  cursor: pointer;
-}
-.small-btn {
-  position: absolute;
-  top: -10px;
-  font-size: 1.5rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--dark);
-}
-#flip-btn { left: -50px; }
-#retry-btn { right: -50px; }
+    /* หน้า capture */
+    .video-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    video {
+      width: 90vw;
+      max-width: 400px;
+      border-radius: 12px;
+      background: #000;
+    }
+    #countdown {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .capture-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #2c7be5;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .small-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #ddd;
+      cursor: pointer;
+      font-size: 18px;
+    }
 
-/* Download Page */
-#photos {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin: 20px;
-}
-.polaroid {
-  background: white;
-  padding: 8px;
-  box-shadow: var(--shadow);
-}
-.polaroid img {
-  display: block;
-  width: 100%;
-  border-radius: 4px;
-}
-#download-page button {
-  margin: 10px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  background: var(--blue);
-  cursor: pointer;
-  box-shadow: var(--shadow);
-}
-</style>
+    /* หน้า download */
+    .polaroid {
+      background: white;
+      padding: 10px;
+      margin: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: inline-block;
+      border-radius: 6px;
+    }
+    .download-container {
+      text-align: center;
+    }
+    .download-container button {
+      margin: 15px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      background: #2c7be5;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .download-container button:hover {
+      background: #1a5bbf;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Layout Page -->
-<section id="layout-page" class="active">
-  <h2>เลือกจำนวนรูป</h2>
-  <button onclick="startCapture(2)">2 รูป</button>
-  <button onclick="startCapture(4)">4 รูป</button>
-  <button onclick="startCapture(6)">6 รูป</button>
-</section>
-
-<!-- Capture Page -->
-<section id="capture-page">
-  <video id="video" autoplay playsinline></video>
-  <div id="countdown"></div>
-  <div class="capture-controls">
-    <button id="flip-btn" class="small-btn">🔄</button>
-    <button id="capture-btn"></button>
-    <button id="retry-btn" class="small-btn">🔁</button>
+  <!-- หน้าเลือก -->
+  <div id="choose" class="choose-container">
+    <h1>เลือกจำนวนรูป</h1>
+    <button onclick="startCapture(2)">2 รูป</button>
+    <button onclick="startCapture(4)">4 รูป</button>
+    <button onclick="startCapture(6)">6 รูป</button>
   </div>
-</section>
 
-<!-- Download Page -->
-<section id="download-page">
-  <h2>รูปของคุณ</h2>
-  <div id="photos"></div>
-  <button onclick="downloadAll()">Download</button>
-  <button onclick="window.print()">Print</button>
-</section>
+  <!-- หน้า capture -->
+  <div id="capture" class="hidden">
+    <div class="video-container">
+      <video id="camera" autoplay playsinline></video>
+      <div id="countdown"></div>
+    </div>
+    <div class="controls">
+      <button class="capture-btn" onclick="takePhoto()"></button>
+      <button class="small-btn" onclick="switchCamera()">🔄</button>
+      <button class="small-btn" onclick="resetBooth()">🔁</button>
+    </div>
+  </div>
+
+  <!-- หน้า download -->
+  <div id="download" class="hidden download-container">
+    <h1>รูปของคุณ 🎉</h1>
+    <div id="photos"></div>
+    <button onclick="downloadAll()">Download</button>
+    <button onclick="window.print()">Print</button>
+  </div>
 
 <script>
-let video = document.getElementById('video');
-let countdownEl = document.getElementById('countdown');
-let captureCount = 0, totalPhotos = 0;
-let photos = [];
+let video = document.getElementById("camera");
+let countdownEl = document.getElementById("countdown");
+let choosePage = document.getElementById("choose");
+let capturePage = document.getElementById("capture");
+let downloadPage = document.getElementById("download");
+let photosDiv = document.getElementById("photos");
+
+let totalShots = 0;
+let takenShots = 0;
+let photoList = [];
+let stream;
+let currentFacingMode = "user";
 
 async function startCapture(num) {
-  totalPhotos = num;
-  photos = [];
-  captureCount = 0;
-  showPage('capture-page');
-  let stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  video.srcObject = stream;
+  totalShots = num;
+  takenShots = 0;
+  photoList = [];
+  choosePage.classList.add("hidden");
+  downloadPage.classList.add("hidden");
+  capturePage.classList.remove("hidden");
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
+    video.srcObject = stream;
+  } catch (err) {
+    alert("ไม่สามารถเข้าถึงกล้องได้: " + err);
+  }
 }
 
-function showPage(id) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function countdown(cb) {
+function countdown(callback) {
   let count = 3;
-  countdownEl.textContent = count;
+  countdownEl.innerText = count;
   let timer = setInterval(() => {
     count--;
-    countdownEl.textContent = count > 0 ? count : "";
-    if(count <= 0) { clearInterval(timer); cb(); }
+    if (count > 0) {
+      countdownEl.innerText = count;
+    } else {
+      clearInterval(timer);
+      countdownEl.innerText = "";
+      callback();
+    }
   }, 1000);
 }
 
-document.getElementById('capture-btn').onclick = () => {
+function takePhoto() {
+  if (takenShots >= totalShots) return;
   countdown(() => {
-    let canvas = document.createElement('canvas');
+    let canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    photos.push(canvas.toDataURL());
-    captureCount++;
-    if (captureCount >= totalPhotos) {
-      showDownload();
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let imgURL = canvas.toDataURL("image/png");
+    photoList.push(imgURL);
+    takenShots++;
+
+    if (takenShots < totalShots) {
+      setTimeout(takePhoto, 1000);
+    } else {
+      endCapture();
     }
   });
-};
+}
 
-function showDownload() {
-  showPage('download-page');
-  let container = document.getElementById('photos');
-  container.innerHTML = "";
-  photos.forEach(src => {
-    let div = document.createElement('div');
-    div.className = 'polaroid';
-    div.innerHTML = `<img src="${src}">`;
-    container.appendChild(div);
+function switchCamera() {
+  currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+  startCapture(totalShots);
+}
+
+function resetBooth() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+  capturePage.classList.add("hidden");
+  downloadPage.classList.add("hidden");
+  choosePage.classList.remove("hidden");
+}
+
+function endCapture() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
+  capturePage.classList.add("hidden");
+  downloadPage.classList.remove("hidden");
+  photosDiv.innerHTML = "";
+  photoList.forEach(imgURL => {
+    let polaroid = document.createElement("div");
+    polaroid.className = "polaroid";
+    let img = document.createElement("img");
+    img.src = imgURL;
+    img.style.width = "150px";
+    polaroid.appendChild(img);
+    photosDiv.appendChild(polaroid);
   });
 }
 
 function downloadAll() {
-  photos.forEach((src, i) => {
-    let a = document.createElement('a');
-    a.href = src;
-    a.download = `photo_${i+1}.png`;
+  photoList.forEach((imgURL, i) => {
+    let a = document.createElement("a");
+    a.href = imgURL;
+    a.download = "photo_" + (i+1) + ".png";
     a.click();
   });
 }
